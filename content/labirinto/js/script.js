@@ -162,31 +162,38 @@
 	//entradas do touch
 	//para cima
 	btnTop.addEventListener('touchstart',function(e){
-		moveClickDown(38);
 		e.preventDefault();
+		moveClickDown(38);
 	},false);
-	btnTop.addEventListener('touchend',function(){
+	btnTop.addEventListener('touchend',function(e){
+		e.preventDefault();
 		moveClickUp(38);
 	},false);
 	//para baixo
-	btnDown.addEventListener('touchstart',function(){
+	btnDown.addEventListener('touchstart',function(e){
+		e.preventDefault();
 		moveClickDown(40);
 	},false);
-	btnDown.addEventListener('touchend',function(){
+	btnDown.addEventListener('touchend',function(e){
+		e.preventDefault();
 		moveClickUp(40);
 	},false);
 	//para esquerda
-	btnLeft.addEventListener('touchstart',function(){
+	btnLeft.addEventListener('touchstart',function(e){
+		e.preventDefault();
 		moveClickDown(37);
 	},false);
-	btnLeft.addEventListener('touchend',function(){
+	btnLeft.addEventListener('touchend',function(e){
+		e.preventDefault();
 		moveClickUp(37);
 	},false);
 	//para direita
-	btnRight.addEventListener('touchstart',function(){
+	btnRight.addEventListener('touchstart',function(e){
+		e.preventDefault();
 		moveClickDown(39);
 	},false);
-	btnRight.addEventListener('touchend',function(){
+	btnRight.addEventListener('touchend',function(e){
+		e.preventDefault();
 		moveClickUp(39);
 	},false);
 	
