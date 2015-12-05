@@ -7,27 +7,27 @@ body{
 	height: 50px;
 	background-color: #555;
 	cursor: pointer; 
+	border: outset 2px;
 	border-radius: 10px;
 }
 .btn:hover{
 	background-color: #000;
 }
-
+.btn:active{
+	border: inset 2px;
+}
 #top{
 	top: 10px;
 	left: 10px;
 }
-
 #down{
 	top: 20px;
 	left: 10px;
 }
-
 #right{
-	top: -110px;
+	top: -114px;
 	left: 228px;
 }
-
 #left{
 	top: -60px;
 	left: 168px;

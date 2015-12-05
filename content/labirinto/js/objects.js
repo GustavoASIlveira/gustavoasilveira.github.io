@@ -25,7 +25,7 @@ SpriteObject.prototype.halfHeight = function(){
 
 var Hero = function(srcX,srcY,width,height,x,y){
 	SpriteObject.call(this,srcX,srcY,width,height,x,y);
-	this.speed = 1;
+	this.speed = 2;
 	this.vx = 0;
 	this.vy = 0;
 	this.countAnim = 0;
