@@ -14,6 +14,7 @@
 	var sprites = [];
 	var walls = [];
 	var keys = [];
+	var clocks = [];
 	var hero = null;
 	var exit = null;
 	
@@ -150,14 +151,13 @@
 				var tile = levelMap[row][column];
 				if(tile !== EMPTY){
 					//Determina a coordenada da imagem a ser capturada no spritesheet
-					//tileSrcX = Math.floor(tile - 1) * 28; 
 					switch(tile){
 						case WALL:
 							var wall = new SpriteObject(0,0,SIZE,SIZE,column * SIZE,row * SIZE);
 							walls.push(wall);
 							break;
 						case CRYSTAL:
-							var keySprite = new SpriteObject(83,0,28,28,(column * SIZE)+2,(row * SIZE)+2);
+							var keySprite = new SpriteObject(28,0,28,28,(column * SIZE)+4,(row * SIZE)+4);
 							sprites.push(keySprite);
 							keys.push(keySprite);
 							break;
@@ -168,8 +168,13 @@
 									sprites.push(hero);
 									break;
 								case exitPosit:
-									exit = new SpriteObject(55,0,28,28,(column * SIZE)+4,(row * SIZE)+4);
+									exit = new SpriteObject(0,0,28,28,(column * SIZE)+4,(row * SIZE)+4);
 									sprites.push(exit);
+									break;
+								default:
+									var clock = new SpriteObject(56,0,20,28,(column * SIZE)+8,(row * SIZE)+4);
+									clocks.push(clock);
+									sprites.push(clock);
 									break;
 							}
 							countPosit++;
