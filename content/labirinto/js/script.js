@@ -1,12 +1,17 @@
 (function(){
 	var 
-	cnv = document.querySelector('canvas'),
+	cnv = document.querySelector('#gamecnv'),
 	ctx = cnv.getContext('2d'),
+	scoreCnv = document.querySelector('#scorecnv'),
+	scoreCtx = scoreCnv.getContext('2d');
 	//botões
 	btnLeft = document.querySelector('#left'),
 	btnTop = document.querySelector('#top'),
 	btnRight = document.querySelector('#right'),
 	btnDown = document.querySelector('#down');
+	//configurações do texto
+	scoreCtx.font = "normal bold 15px emulogic";
+	scoreCtx.textBaseline = "top";
 	
 	
 	//Variáveis úteis
@@ -17,6 +22,11 @@
 	var clocks = [];
 	var hero = null;
 	var exit = null;
+	var score = 0;
+	
+	//estados do jogo
+	var LOADING = 0,SPLASH = 1,SELECT_MAP = 2,BUILD_MAP = 3, PLAYING = 4,OVER = 5;
+	var gameState = LOADING;
 	
 	//teclas
 	var LEFT = 37, UP = 38, RIGHT = 39, DOWN = 40;
@@ -183,7 +193,7 @@
 				}
 			}
 		}
-	}
+	}//fim do construtor do mapa
 	
 	//constroi o mapa
 	buildMap(map);
@@ -345,10 +355,31 @@
 			var w = walls[i];
 			blockRetangle(hero,w);
 		}
+		
+		//teste colisão com os orbs
+		for(var i in keys){
+			var orb = keys[i];
+			if(keys.length > 0){
+				if(hitTestRectangle(hero,orb)){
+					removeObject(orb,keys);
+					removeObject(orb,sprites);
+					score++;
+					renderScore();
+					i--;
+				}
+			}
+		}
+	}//fim do update
+	
+	function renderScore(){
+		scoreCtx.fillStyle = "#000";
+		scoreCtx.fillRect(0,0,scoreCnv.width,scoreCnv.height);
+		scoreCtx.drawImage(img,28,0,28,28,10,5,20,20);
+		scoreCtx.fillStyle = "#ccf";
+		scoreCtx.fillText(chkScore(score),35,10);
 	}
 	
 	function render(){
-		ctx.clearRect(0,0,cnv.width,cnv.height);
 		ctx.save();
 		ctx.translate(-camera.x,-camera.y);
 		ctx.drawImage(imgMap1,0,0,imgMap1.width,imgMap1.height,0,0,imgMap1.width,imgMap1.height);
@@ -360,7 +391,16 @@
 		}
 		ctx.restore();
 	}
+	
+	//Função para remover objetos de um array
+	function removeObject(objectToRemove, array){
+		var i = array.indexOf(objectToRemove);
+		if(i !== -1){
+			array.splice(i,1);
+		}
+	}
 	var game = setInterval(loop,33,true);
+	renderScore();
 }());
 
 

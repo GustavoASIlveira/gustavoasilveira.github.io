@@ -1,3 +1,7 @@
+@font-face{
+	font-family: emulogic;
+	src: url("emulogic.ttf");
+}
 body{
 	background-color: #222;
 }
@@ -31,4 +35,8 @@ body{
 #left{
 	top: -60px;
 	left: 168px;
+}
+#gamecnv{
+	position: relative;
+	top: -4px;
 }

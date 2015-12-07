@@ -3,13 +3,16 @@ function hitTestRectangle(r1,r2){
 	//calcula o vetor que indica a distância entre os objetos
 	var vx = r1.centerX() - r2.centerX();
 	var vy = r1.centerY() - r2.centerY();
+	
 	//Soma as metades das larguras e alturas
 	var combinedHalfWidths = r1.halfWidth() + r2.halfWidth();
-	var combinedHalfHeights = r1.halftHeight() + r2.halftHeight();
+	var combinedHalfHeights = r1.halfHeight() + r2.halfHeight();
+
 	//Confere se houve colisão no eixo X
-	if(Math.abs(vx) < combinedHalfWidths && Math.abs(vy) < combinedHalfHeights){
+	if(Math.abs(vx) < combinedHalfWidths && Math.abs(vy) < combinedHalfHeights){		
 		return true;
 	}
+	
 	return false;
 }
 
