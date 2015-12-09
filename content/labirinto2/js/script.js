@@ -4,6 +4,12 @@
 	//contexto de renderização
 	var ctx = cnv.getContext('2d');
 	
+	//botões
+	var btnLeft = document.querySelector('#left');
+	var btnRight = document.querySelector('#right');
+	var btnUp = document.querySelector('#up');
+	var btnDown = document.querySelector('#down');
+	
 	//recursos do jogo
 	var assetsToLoad = [];
 	var loadedAssets = 0;
@@ -124,21 +130,93 @@
 	camera.y = (gameWorld.y + gameWorld.height/2) - camera.height/2;
 	
 	//entradas do jogador
+	//teclado
 	window.addEventListener('keydown',function(e){
 		e.preventDefault();
 		keydownHandler(e.keyCode);
+	},false);
+	window.addEventListener('keyup',function(e){
+		e.preventDefault();
+		keyupHandler(e.keyCode);
+	},false);
+	
+	//toque na tela - entrada
+	btnLeft.addEventListener('touchstart',function(e){
+		e.preventDefault();
+		keydownHandler(37);
+	},false);
+	
+	btnRight.addEventListener('touchstart',function(e){
+		e.preventDefault();
+		keydownHandler(39);
+	},false);
+	
+	btnUp.addEventListener('touchstart',function(e){
+		e.preventDefault();
+		keydownHandler(38);
+	},false);
+	
+	btnDown.addEventListener('touchstart',function(e){
+		e.preventDefault();
+		keydownHandler(40);
+	},false);
+	
+	cnv.addEventListener('touchstart',function(e){
+		keyupHandler(13);
+	},false);
+	
+	//toque na tela - saída
+	btnLeft.addEventListener('touchend',function(e){
+		e.preventDefault();
+		keyupHandler(37);
+	},false);
+	
+	btnRight.addEventListener('touchend',function(e){
+		e.preventDefault();
+		keyupHandler(39);
+	},false);
+	
+	btnUp.addEventListener('touchend',function(e){
+		e.preventDefault();
+		keyupHandler(38);
+	},false);
+	
+	btnDown.addEventListener('touchend',function(e){
+		e.preventDefault();
+		keyupHandler(40);
 	},false);
 	
 	//movimentos
 	function keydownHandler(key){
 		switch(key){
 			case LEFT:
+				mvLeft = true
 				break;
 			case UP:
+				mvUp = true;
 				break;
 			case RIGHT:
+				mvRight = true;
 				break;
 			case DOWN:
+				mvDown = true;
+				break;
+		}
+	}
+	
+	function keyupHandler(key){
+		switch(key){
+			case LEFT:
+				mvLeft = false
+				break;
+			case UP:
+				mvUp = false;
+				break;
+			case RIGHT:
+				mvRight = false;
+				break;
+			case DOWN:
+				mvDown = false;
 				break;
 			case ENTER:
 				if(gameState === START){
@@ -167,7 +245,7 @@
 							orbs.push(orb);
 							break;
 						case HERO:
-							hero = new HeroObject(heroImg,0,0,24,32,posX + (MAPCELLSIZE/2) - 12, posY + (MAPCELLSIZE/2) - 16);
+							hero = new HeroObject(heroImg,0,0,OBJECTSIZE,OBJECTSIZE,posX + (MAPCELLSIZE/2) - OBJECTSIZE/2, posY + (MAPCELLSIZE/2) - OBJECTSIZE/2);
 							sprites.push(hero);
 							break;
 					}
@@ -202,11 +280,94 @@
 	}
 	
 	function update(){
+		//atualização da posição do personagem
+		hero.vx = hero.vy = 0;
+		if(mvLeft && !mvRight){
+			hero.vx = -hero.speed;
+			hero.srcY = hero.height * 1;
+		}
+		if(mvRight && !mvLeft){
+			hero.vx = hero.speed;
+			hero.srcY = hero.height * 2;
+		}
+		if(mvUp && !mvDown){
+			hero.vy = -hero.speed;
+			hero.srcY = hero.height * 3;
+		}
+		if(mvDown && !mvUp){
+			hero.vy = hero.speed;
+			hero.srcY = hero.height * 0;
+		}
 		
-	}
+		//animação do personagem
+		if(mvLeft || mvRight || mvDown || mvUp){
+			hero.countAnim++;
+			if(hero.countAnim >= 16){
+				hero.countAnim = 0;
+			}
+		} else {
+			hero.countAnim = 0;
+		}
+		hero.srcX = Math.floor(hero.countAnim / 4) * hero.width;
+		hero.x += hero.vx;
+		hero.y += hero.vy;
+		
+		//aplica o movimento e mantém o personagem dentro das fronteiras do jogo
+		hero.x = Math.max(MAPCELLSIZE,Math.min(hero.x + hero.vx,gameWorld.width - hero.width - MAPCELLSIZE));
+		hero.y = Math.max(MAPCELLSIZE,Math.min(hero.y + hero.vy,gameWorld.height - hero.height - MAPCELLSIZE));
+		
+		//posiciona a câmera em relação ao player
+		if(hero.x < camera.leftInnerBoundary()){
+			camera.x = Math.floor(hero.x - (camera.width * 0.25));
+		}
+		if(hero.y < camera.topInnerBoundary()){
+			camera.y = Math.floor(hero.y - (camera.height * 0.25));
+		}
+		if(hero.x + hero.width > camera.rightInnerBoundary()){
+			camera.x = Math.floor(hero.x + hero.width - (camera.width * 0.75)); 
+		}
+		if(hero.y + hero.height > camera.bottomInnerBoundary()){
+			camera.y = Math.floor(hero.y + hero.height - (camera.height * 0.75)); 
+		}
+		
+		//limitando a câmera às fronteiras do mundo
+		if(camera.x < gameWorld.x){
+			camera.x = gameWorld.x;
+		}
+		if(camera.y < gameWorld.y){
+			camera.y = gameWorld.y;
+		}
+		if(camera.x + camera.width > gameWorld.x + gameWorld.width){
+			camera.x = gameWorld.x + gameWorld.width - camera.width;
+		}
+		if(camera.y + camera.height > gameWorld.y + gameWorld.height){
+			camera.y = gameWorld.y + gameWorld.height - camera.height;
+		}
+		
+		//testa colisão com as paredes do labirionto
+		for(var i in walls){
+			var w = walls[i];
+			blockRetangle(hero,w);
+		}
+		
+		//teste colisão com os orbs
+		for(var i in orbs){
+			var orb = orbs[i];
+			if(orbs.length > 0){
+				if(hitTestRectangle(hero,orb)){
+					removeObject(orb,orbs);
+					removeObject(orb,sprites);
+					//score++;
+					//renderScore();
+					i--;
+				}
+			}
+		}
+		
+	}//fim do update
 	
 	function render(){
-		//ctx.clearRect(0,0,cnv.width,cnv.height);
+		ctx.clearRect(0,0,cnv.width,cnv.height);
 		ctx.save();
 		ctx.translate(-camera.x,-camera.y);
 		ctx.drawImage(mapImg,0,0,mapImg.width,mapImg.height,0,0,mapImg.width,mapImg.height);
@@ -220,4 +381,15 @@
 	}
 	
 	var game = setInterval(loop,33);
+	
+	//funções extras -------------------------
+	//Função para remover objetos de um array
+	function removeObject(objectToRemove, array){
+		var i = array.indexOf(objectToRemove);
+		if(i !== -1){
+			array.splice(i,1);
+		}
+	}
+	
+	
 }());
