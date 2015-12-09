@@ -182,7 +182,8 @@
 		//analisar o estado do jogo
 		switch(gameState){
 			case LOADING:
-				console.log("LOADING...");
+				ctx.fillStyle = "#fff";
+				ctx.fillText("LOADING...",50,50);
 				break;
 			case START:
 				ctx.drawImage(startImg,0,0,cnv.width,cnv.height,0,0,cnv.width,cnv.height);
