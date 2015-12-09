@@ -1,0 +1,15 @@
+*{
+	margin:0;
+	padding:0;
+}
+body{
+	background-color: #000;
+}
+#container{
+	position: relative;
+	margin: 10px auto;
+	width: 360px;
+	height: 360px;
+	border: inset;
+	border-radius: 5px;
+}
