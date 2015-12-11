@@ -16,9 +16,28 @@
 	var sprites = [];
 	var walls = [];
 	var orbs = [];
+	var messages = [];
 	var score = 0;
+	var scoreToWin = 0;
 	var hero = null;
 	
+	//objetos do jogo
+	//objetos timer e score
+	var timer = new GameTimer(70);
+	
+	//Cronômetro
+	timerMessage = new MessageObject(cnv.width/2 + 10,5,"TIME: ","#E6E6FA");
+	messages.push(timerMessage);
+	
+	//score
+	scoreMessage = new MessageObject(10,5,"ORBS: 00","#E6E6FA");
+	messages.push(scoreMessage);
+	
+	//teste de loading ------
+	var v1 = v2 = color = 0;
+	var one = true;
+	//fim do teste de loading
+		
 	//estados do jogo
 	var LOADING = 0;
 	var START = 1;
@@ -62,7 +81,7 @@
 				var image = assetsToLoad[i];
 				image.removeEventListener('load',loadHandler,false);
 			}
-			gameState = START;
+			setTimeout(function(){gameState = START;},3300);
 		}
 	}
 	
@@ -185,6 +204,10 @@
 		e.preventDefault();
 		keyupHandler(40);
 	},false);
+	//previne a movimentação do fundo da tela
+	window.addEventListener('touchmove',function(e){
+		e.preventDefault();
+	},false);
 	
 	//movimentos
 	function keydownHandler(key){
@@ -252,16 +275,16 @@
 				}
 			}
 		}
+		scoreToWin = orbs.length;
 	}//fim da função buildMap
 	
-	//funções básicas
+	//funções básicas !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
 	function loop(){
 		//analisar o estado do jogo
 		switch(gameState){
 			case LOADING:
-				ctx.fillStyle = "#fff";
-				ctx.fillText("LOADING...",50,50);
+				loadingAnim();
 				break;
 			case START:
 				ctx.drawImage(startImg,0,0,cnv.width,cnv.height,0,0,cnv.width,cnv.height);
@@ -271,6 +294,9 @@
 				gameState = PLAYING;
 				break;
 			case PLAYING:
+				if(!timer.isOn){
+					timer.start();
+				}
 				window.requestAnimationFrame(render,cnv);
 				update();
 				break;
@@ -279,6 +305,7 @@
 		}//fim da análise do estado do jogo
 	}
 	
+	//função principal de atualização dos elementos ---------------->
 	function update(){
 		//atualização da posição do personagem
 		hero.vx = hero.vy = 0;
@@ -357,15 +384,15 @@
 				if(hitTestRectangle(hero,orb)){
 					removeObject(orb,orbs);
 					removeObject(orb,sprites);
-					//score++;
-					//renderScore();
+					scoreUpdate();
 					i--;
 				}
 			}
 		}
-		
-	}//fim do update
+		timerUpdate();
+	}//fim do update ------------------------------------------------------>
 	
+	//função de renderização do jogo -------------------------------------->
 	function render(){
 		ctx.clearRect(0,0,cnv.width,cnv.height);
 		ctx.save();
@@ -378,12 +405,26 @@
 			}
 		}
 		ctx.restore();
-	}
+		
+		//Exibindo as mensagens
+		if(messages.length > 0){
+			for(var i in messages){
+				var msg = messages[i];
+				if(msg.visible){
+					ctx.font = msg.font;
+					ctx.fillStyle = msg.color;
+					ctx.textBaseline = msg.textBaseline;
+					ctx.fillText(msg.text,msg.x,msg.y);
+				}
+			}
+		}
+		
+	}//fim da função de renderização do jogo ------------------------------->
 	
 	var game = setInterval(loop,33);
 	
 	//funções extras -------------------------
-	//Função para remover objetos de um array
+	//função para remover objetos de um array
 	function removeObject(objectToRemove, array){
 		var i = array.indexOf(objectToRemove);
 		if(i !== -1){
@@ -391,5 +432,80 @@
 		}
 	}
 	
+	//função para animação do loading
+	function loadingAnim(){
+		if(one){
+			v2 += 0.02;	
+			if(v2 >= 1.98){
+				one = false;
+				v1 = 0;
+			}				
+		} else {
+			v1+= 0.02;
+			if(v1 >= 1.98){
+				one = true;
+				v2 = 0;
+				color++;
+				if(color >= 5){
+					color = 0;
+				}
+			}
+		}
+		ctx.clearRect(0,0,cnv.width,cnv.height);
+		//ctx.fillStyle = "#fff";
+		//ctx.fillText("LOADING...",50,50);
+		ctx.beginPath();
+		ctx.arc(cnv.width/2,cnv.height/2,30,v1 * Math.PI,v2 * Math.PI);
+		switch(color){
+			case 0:
+				ctx.strokeStyle = "#f00";
+				break;
+			case 1:
+				ctx.strokeStyle = "#ff0";
+				break;
+			case 2:
+				ctx.strokeStyle = "#0f0";
+				break;
+			case 3:
+				ctx.strokeStyle = "#0ff";
+				break;
+			case 4:
+				ctx.strokeStyle = "#00f";
+				break;
+			case 5:
+				ctx.strokeStyle = "#f0f";
+				break;
+		}
+		ctx.lineWidth = 15;
+		ctx.stroke();
+	}//fim da função para animação do loading
+	
+	//atualização do timer
+	function timerUpdate(){
+		//Adiciona um zero ao timer quando restam menos de 10 segundos
+		if(timer.time < 10){
+			timerMessage.text = "TIME: 0" + timer.time;
+		} else {
+			timerMessage.text = "TIME: " + timer.time;
+		}
+		//Confere se o tempo acabou
+		if(timer.time === 0){
+			gameState = OVER;
+		}
+	}
+	
+	//atualização do score
+	function scoreUpdate(){
+		score++;
+		//Adiciona um zero ao score quando este for menor que 10
+		if(score < 10){
+			scoreMessage.text = "ORBS: 0" + score;
+		} else {
+			scoreMessage.text = "ORBS: " + score;
+		}
+		if(score >= scoreToWin){
+			gameState = OVER;
+		}
+	}
 	
 }());

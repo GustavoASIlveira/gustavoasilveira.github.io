@@ -1,3 +1,4 @@
+//classe Sprite
 var SpriteObject = function(img,srcX,srcY,width,height,x,y){
 	this.img = img;
 	this.srcX = srcX;
@@ -24,6 +25,7 @@ SpriteObject.prototype.halfHeight = function(){
 	return this.height/2;
 }
 
+//classe Hero -> herda de Sprite
 var HeroObject = function(img,srcX,srcY,width,height,x,y){
 	SpriteObject.call(this,img,srcX,srcY,width,height,x,y);
 	this.speed = 2;
@@ -33,3 +35,49 @@ var HeroObject = function(img,srcX,srcY,width,height,x,y){
 }
 
 HeroObject.prototype = Object.create(SpriteObject.prototype);
+
+//classe Timer
+var GameTimer = function(time){
+	this.time = time;
+	this.interval = undefined;
+	this.isOn = false;
+}
+
+GameTimer.prototype.start = function(){
+	var self = this;
+	this.interval = setInterval(function(){
+		self.tic();
+	},1000);
+	this.isOn = true;
+}
+
+GameTimer.prototype.tic = function(){
+	this.time--;
+}
+
+GameTimer.prototype.reset = function(){
+	this.time = 0;
+	this.isOn = false;
+}
+
+GameTimer.prototype.stop = function(){
+	clearInterval(this.interval);
+	this.isOn = false;
+}
+
+//classe Mesage
+var MessageObject = function(x,y,text,color){
+	this.x = x;
+	this.y = y;
+	this.visible = true;
+	this.text = text;
+	this.font = "normal bold 15px emulogic";
+	this.color = color;
+	this.textBaseline = "top";
+}
+
+
+
+
+
+
