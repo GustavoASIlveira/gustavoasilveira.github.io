@@ -20,6 +20,7 @@
 	var score = 0;
 	var scoreToWin = 0;
 	var hero = null;
+	var endGame = false;
 	
 	//objetos do jogo
 	//objetos timer e score
@@ -32,6 +33,11 @@
 	//score
 	scoreMessage = new MessageObject(10,5,"ORBS: 00","#E6E6FA");
 	messages.push(scoreMessage);
+	
+	//game over message
+	var gameOverMessage = new MessageObject(0,cnv.height/2,"","#fff");
+	gameOverMessage.visible = false;
+	messages.push(gameOverMessage);
 	
 	//teste de loading ------
 	var v1 = v2 = color = 0;
@@ -242,8 +248,11 @@
 				mvDown = false;
 				break;
 			case ENTER:
-				if(gameState === START){
+				if(gameState === START && !endGame){
 					gameState = BUILD_MAP;
+				} else 
+				if(endGame){
+					restartGame();
 				}
 				break;
 		}
@@ -276,6 +285,7 @@
 			}
 		}
 		scoreToWin = orbs.length;
+		gameState = PLAYING;
 	}//fim da função buildMap
 	
 	//funções básicas !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -291,7 +301,6 @@
 				break;
 			case BUILD_MAP:
 				buildMap(map);
-				gameState = PLAYING;
 				break;
 			case PLAYING:
 				if(!timer.isOn){
@@ -301,6 +310,7 @@
 				update();
 				break;
 			case OVER:
+				gameOver();
 				break;
 		}//fim da análise do estado do jogo
 	}
@@ -452,8 +462,6 @@
 			}
 		}
 		ctx.clearRect(0,0,cnv.width,cnv.height);
-		//ctx.fillStyle = "#fff";
-		//ctx.fillText("LOADING...",50,50);
 		ctx.beginPath();
 		ctx.arc(cnv.width/2,cnv.height/2,30,v1 * Math.PI,v2 * Math.PI);
 		switch(color){
@@ -508,4 +516,49 @@
 		}
 	}
 	
+	//finalização do jogo
+	function gameOver(){
+		if(!endGame){
+			endGame = true;
+			timer.stop();
+			timer.isOn = false;
+			if(score === scoreToWin){
+				gameOverMessage.text = "YOU WIN!";
+			} else {
+				gameOverMessage.color = "#f00";
+				gameOverMessage.text = "YOU LOSE!";
+			}
+			gameOverMessage.x = (cnv.width - ctx.measureText(gameOverMessage.text).width)/2;
+			gameOverMessage.visible = true;
+		}
+		render();
+	}
+	
+	//restaura o jogo
+	function restartGame(){
+		gameState = START;
+		score = 0;
+		timer.time = 70;
+		gameOverMessage.visible = false;
+		hero = null;
+		orbs = [];
+		sprites = [];
+		walls = [];
+		camera.x = (gameWorld.x + gameWorld.width/2) - camera.width/2;
+		camera.y = (gameWorld.y + gameWorld.height/2) - camera.height/2;
+		setTimeout(function(){
+			endGame = false;
+		},1000);
+	}
+	
 }());
+
+
+
+
+
+
+
+
+
+
