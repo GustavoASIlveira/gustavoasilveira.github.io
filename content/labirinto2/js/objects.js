@@ -46,7 +46,7 @@ var EnemyObject = function(img,srcX,srcY,width,height,x,y){
 	this.RIGHT = 4;
 	this.validDirections = [];
 	this.direction = this.NONE;
-	this.hunt = false;
+	this.hunt = true;
 }
 
 EnemyObject.prototype = Object.create(HeroObject.prototype);

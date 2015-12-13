@@ -285,7 +285,8 @@
 						case ZOMBIE:
 							var zmb = new EnemyObject(zombieImg,0,0,OBJECTSIZE,OBJECTSIZE,posX + (MAPCELLSIZE/2) - OBJECTSIZE/2, posY + (MAPCELLSIZE/2) - OBJECTSIZE/2);
 							zmb.speed = 1;
-							//changeDirection(zmb);
+							zmb.hunt = trueOrFalse();
+							alert(zmb.hunt);
 							sprites.push(zmb);
 							zombies.push(zmb);
 							break;
@@ -629,7 +630,7 @@
 			if(upOrDownPassage && leftOrRightPassage || zombie.validDirections.length === 1){
 				//modo de perseguição
 				if(zombie.hunt){
-					findHero();
+					findHero(zombie);
 				}
 				if(zombie.direction === zombie.NONE){
 					var randNumber = Math.floor(Math.random() * zombie.validDirections.length);
@@ -662,6 +663,47 @@
 			
 		}
 	}//fim de changeDirection
+	
+	//função busca o herói
+	function findHero(zombie){
+		var closestDirection = undefined;
+		
+		//calcula a distância entre o zumbi e o heroi
+		var vx = hero.centerX() - zombie.centerX();
+		var vy = hero.centerY() - zombie.centerY();
+		
+		//avalia se a distância é maior em x ou y
+		if(Math.abs(vx) >= Math.abs(vy)){
+			//avalia direita ou esquerda
+			if(vx > 0){
+				closestDirection = zombie.RIGHT;
+			} else {
+				closestDirection = zombie.LEFT;
+			}
+		} else {
+			//avalia para cima ou para baixo
+			if(vy > 0){
+				closestDirection = zombie.DOWN;
+			} else {
+				closestDirection = zombie.UP;
+			}
+		}
+		
+		//confere se a direção encoutrada encontra-se ente as direções válidas
+		for(var i in zombie.validDirections){
+			if(closestDirection === zombie.validDirections[i]){
+				zombie.direction = closestDirection;
+			}
+		}
+	}
+	
+	function trueOrFalse(){
+		var number = Math.floor(Math.random() * 10)+1;
+		if(number < 8){
+			return true;
+		}
+		return false;
+	}
 	
 }());
 
