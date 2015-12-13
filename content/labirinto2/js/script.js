@@ -16,6 +16,7 @@
 	var sprites = [];
 	var walls = [];
 	var orbs = [];
+	var zombies = [];
 	var messages = [];
 	var score = 0;
 	var scoreToWin = 0;
@@ -69,6 +70,11 @@
 	heroImg.src = "img/heroimg.png";
 	assetsToLoad.push(heroImg);
 	
+	var zombieImg = new Image();
+	zombieImg.addEventListener('load',loadHandler,false);
+	zombieImg.src = "img/zombieimg.png";
+	assetsToLoad.push(zombieImg);
+	
 	var orbImg = new Image();
 	orbImg.addEventListener('load',loadHandler,false);
 	orbImg.src = "img/orbimg.png";
@@ -97,19 +103,19 @@
 		[0,2,2,0,0,0,2,0,2,0,0,0,0,0,0,0,0,2,1,2,0],
 		[0,2,2,1,0,1,1,1,1,0,1,0,1,1,1,0,1,2,2,0,0],
 		[0,0,1,1,2,0,0,2,1,0,1,0,1,2,2,0,1,1,1,0,0],
-		[0,0,0,1,1,1,0,0,0,2,1,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,1,1,1,0,0,0,2,1,0,0,3,0,0,0,0,0,0,0],
 		[0,0,0,0,2,1,1,0,1,1,1,1,1,0,1,1,0,1,1,0,0],
 		[0,0,1,0,2,1,1,0,2,2,2,1,1,0,1,1,0,1,2,0,0],
-		[0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0],
+		[0,2,1,0,3,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0],
 		[0,0,1,0,2,1,1,0,1,1,0,1,1,0,2,1,0,1,1,0,0],
 		[0,2,0,0,2,1,2,0,1,2,0,2,1,0,2,1,0,0,0,0,0],
-		[0,1,1,1,1,1,2,0,0,0,3,0,0,0,1,1,1,1,0,1,0],
+		[0,1,1,1,1,1,2,0,0,0,4,0,0,0,1,1,1,1,0,1,0],
 		[0,2,2,0,2,1,2,0,1,2,0,2,1,0,2,1,2,0,0,2,0],
 		[0,2,2,1,0,1,1,0,1,1,0,1,1,0,2,1,0,0,0,0,0],
-		[0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,0],
+		[0,1,0,1,0,0,0,3,0,0,0,0,0,0,0,0,0,1,1,2,0],
 		[0,0,0,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,0],
 		[0,0,0,0,0,2,1,0,1,2,0,2,1,0,0,1,0,1,1,2,0],
-		[0,2,1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0],
+		[0,2,1,0,1,0,1,0,1,0,1,0,0,3,0,0,0,0,0,0,0],
 		[0,0,1,2,0,0,0,0,1,0,1,0,1,0,1,0,1,1,1,0,0],
 		[0,2,1,1,1,0,1,0,1,0,1,0,1,0,1,2,2,1,1,0,0],
 		[0,0,2,0,2,0,1,2,2,2,1,2,0,2,1,2,2,0,0,2,0],
@@ -118,7 +124,7 @@
 	
 	//constantes para a renderização do mapa
 	var MAPCELLSIZE = 36, OBJECTSIZE = 28;
-	var EMPTY = 0, WALL = 1, ORB = 2, HERO = 3;
+	var EMPTY = 0, WALL = 1, ORB = 2, ZOMBIE = 3, HERO = 4;
 	var ROWS = map.length;
 	var COLUMNS = map[0].length;
 	
@@ -276,6 +282,13 @@
 							sprites.push(orb);
 							orbs.push(orb);
 							break;
+						case ZOMBIE:
+							var zmb = new EnemyObject(zombieImg,0,0,OBJECTSIZE,OBJECTSIZE,posX + (MAPCELLSIZE/2) - OBJECTSIZE/2, posY + (MAPCELLSIZE/2) - OBJECTSIZE/2);
+							zmb.speed = 1;
+							//changeDirection(zmb);
+							sprites.push(zmb);
+							zombies.push(zmb);
+							break;
 						case HERO:
 							hero = new HeroObject(heroImg,0,0,OBJECTSIZE,OBJECTSIZE,posX + (MAPCELLSIZE/2) - OBJECTSIZE/2, posY + (MAPCELLSIZE/2) - OBJECTSIZE/2);
 							sprites.push(hero);
@@ -336,6 +349,13 @@
 			hero.srcY = hero.height * 0;
 		}
 		
+		hero.x += hero.vx;
+		hero.y += hero.vy;
+		
+		//aplica o movimento e mantém o personagem dentro das fronteiras do jogo
+		hero.x = Math.max(MAPCELLSIZE,Math.min(hero.x + hero.vx,gameWorld.width - hero.width - MAPCELLSIZE));
+		hero.y = Math.max(MAPCELLSIZE,Math.min(hero.y + hero.vy,gameWorld.height - hero.height - MAPCELLSIZE));
+		
 		//animação do personagem
 		if(mvLeft || mvRight || mvDown || mvUp){
 			hero.countAnim++;
@@ -346,12 +366,6 @@
 			hero.countAnim = 0;
 		}
 		hero.srcX = Math.floor(hero.countAnim / 4) * hero.width;
-		hero.x += hero.vx;
-		hero.y += hero.vy;
-		
-		//aplica o movimento e mantém o personagem dentro das fronteiras do jogo
-		hero.x = Math.max(MAPCELLSIZE,Math.min(hero.x + hero.vx,gameWorld.width - hero.width - MAPCELLSIZE));
-		hero.y = Math.max(MAPCELLSIZE,Math.min(hero.y + hero.vy,gameWorld.height - hero.height - MAPCELLSIZE));
 		
 		//posiciona a câmera em relação ao player
 		if(hero.x < camera.leftInnerBoundary()){
@@ -381,7 +395,7 @@
 			camera.y = gameWorld.y + gameWorld.height - camera.height;
 		}
 		
-		//testa colisão com as paredes do labirionto
+		//testa colisão com as paredes do labirinto
 		for(var i in walls){
 			var w = walls[i];
 			blockRetangle(hero,w);
@@ -399,6 +413,28 @@
 				}
 			}
 		}
+		
+		//movendo os zumbis
+		for(var i in zombies){
+			var zombie = zombies[i];
+			//atualiza a posição do zumbi
+			zombie.x += zombie.vx;
+			zombie.y += zombie.vy;
+			//confere se está em uma encruzilhada
+			if(Math.floor(zombie.x - 4) % MAPCELLSIZE === 0 && Math.floor(zombie.y - 4) % MAPCELLSIZE === 0 ){				
+				changeDirection(zombie);
+			}
+			//animação do zumbi
+			zombie.countAnim++;
+			if(zombie.countAnim >= 32){
+				zombie.countAnim = 0;
+			}
+			zombie.srcX = Math.floor(zombie.countAnim / 8) * zombie.width;
+			if(hitTestRectangle(hero,zombie)){
+				gameState = OVER;
+			}
+		}
+		//atualização do cronômetro
 		timerUpdate();
 	}//fim do update ------------------------------------------------------>
 	
@@ -550,6 +586,81 @@
 			endGame = false;
 		},1000);
 	}
+	
+	//muda a posição do zumbi
+	function changeDirection(zombie){
+		//limpa as configurações de movimentação do zumbi
+		zombie.validDirections = [];
+		zombie.direction = zombie.NONE;
+		//identifica as coordenadas do zumbi no mapa (matriz)
+		var zombieColumn = Math.floor(zombie.x/MAPCELLSIZE);
+		var zombieRow = Math.floor(zombie.y/MAPCELLSIZE);
+		//vasculha o ambiente ao redor do zumbi e preenche o array de possíveis direções a tomar
+		if(zombieRow > 1){
+			var above = map[zombieRow - 1][zombieColumn];
+			if(above !== WALL){
+				zombie.validDirections.push(zombie.UP);
+			}
+		}
+		if(zombieRow < ROWS - 2){
+			var below = map[zombieRow + 1][zombieColumn];
+			if(below !== WALL){
+				zombie.validDirections.push(zombie.DOWN);
+			}
+		}
+		if(zombieColumn > 1){
+			var left = map[zombieRow][zombieColumn - 1];
+			if(left !== WALL){
+				zombie.validDirections.push(zombie.LEFT);
+			}
+		}
+		if(zombieColumn < COLUMNS - 2){
+			var right = map[zombieRow][zombieColumn + 1];
+			if(right !== WALL){
+				zombie.validDirections.push(zombie.RIGHT);
+			}
+		}
+		//identifica se o zumbi está em uma encruzilhada
+		if(zombie.validDirections.length > 0){
+			var upOrDownPassage = (zombie.validDirections.indexOf(zombie.UP) !== -1 || zombie.validDirections.indexOf(zombie.DOWN) !== -1);
+			var leftOrRightPassage = (zombie.validDirections.indexOf(zombie.LEFT) !== -1 || zombie.validDirections.indexOf(zombie.RIGHT) !== -1);
+			//caso seja uma encruzilhada, altera a direção do zumbi
+			if(upOrDownPassage && leftOrRightPassage || zombie.validDirections.length === 1){
+				//modo de perseguição
+				if(zombie.hunt){
+					findHero();
+				}
+				if(zombie.direction === zombie.NONE){
+					var randNumber = Math.floor(Math.random() * zombie.validDirections.length);
+					zombie.direction = zombie.validDirections[randNumber];
+				}
+				//aplica a direção do zumbi
+				switch(zombie.direction){
+						case zombie.RIGHT:
+							zombie.vx = zombie.speed;
+							zombie.vy = 0;
+							zombie.srcY = zombie.height * 2;
+							break;
+						case zombie.LEFT:
+							zombie.vx = -zombie.speed;
+							zombie.vy = 0;
+							zombie.srcY = zombie.height * 1;
+							break;
+						case zombie.UP:
+							zombie.vx = 0;
+							zombie.vy = -zombie.speed;
+							zombie.srcY = zombie.height * 3;
+							break;
+						case zombie.DOWN:
+							zombie.vx = 0;
+							zombie.vy = zombie.speed;
+							zombie.srcY = zombie.height * 0;
+							break;
+				}
+			}
+			
+		}
+	}//fim de changeDirection
 	
 }());
 

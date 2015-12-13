@@ -36,6 +36,21 @@ var HeroObject = function(img,srcX,srcY,width,height,x,y){
 
 HeroObject.prototype = Object.create(SpriteObject.prototype);
 
+//class Enemy -> herda de Hero
+var EnemyObject = function(img,srcX,srcY,width,height,x,y){
+	HeroObject.call(this,img,srcX,srcY,width,height,x,y);
+	this.NONE = 0;
+	this.UP = 1;
+	this.DOWN = 2;
+	this.LEFT = 3;
+	this.RIGHT = 4;
+	this.validDirections = [];
+	this.direction = this.NONE;
+	this.hunt = false;
+}
+
+EnemyObject.prototype = Object.create(HeroObject.prototype);
+
 //classe Timer
 var GameTimer = function(time){
 	this.time = time;
