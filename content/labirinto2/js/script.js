@@ -577,6 +577,7 @@
 		timer.time = 70;
 		gameOverMessage.visible = false;
 		hero = null;
+		zombies = [];
 		orbs = [];
 		sprites = [];
 		walls = [];
