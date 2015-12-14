@@ -406,6 +406,11 @@
 			var orb = orbs[i];
 			if(orbs.length > 0){
 				if(hitTestRectangle(hero,orb)){
+					var pick = document.createElement("audio");
+					pick.src = "sound/pick.mp3";
+					pick.addEventListener("canplaythrough",function(){
+						pick.play();
+					},false);
 					removeObject(orb,orbs);
 					removeObject(orb,sprites);
 					scoreUpdate();
@@ -420,6 +425,8 @@
 			//atualiza a posição do zumbi
 			zombie.x += zombie.vx;
 			zombie.y += zombie.vy;
+			//som do zumbi
+			playZombieSound(zombie);
 			//confere se está em uma encruzilhada
 			if(Math.floor(zombie.x - 4) % MAPCELLSIZE === 0 && Math.floor(zombie.y - 4) % MAPCELLSIZE === 0 ){				
 				changeDirection(zombie);
@@ -703,6 +710,23 @@
 		}
 		return true;
 	}
+	
+	function playZombieSound(zombie){
+		if(zombie.x > camera.x && zombie.y > camera.y && zombie.x + zombie.width < camera.x + camera.width && zombie.y + zombie.height < camera.y + camera.height){
+			if(!zombie.mkNoise){
+				var zSound = document.createElement("audio");
+				var n = Math.floor(Math.random()*3)+1;
+					zSound.src = "sound/" + n + ".mp3";
+					zSound.addEventListener("canplaythrough",function(){
+						zSound.play();
+					},false);
+					zombie.mkNoise = true;
+			}
+		}else{
+			zombie.mkNoise = false;
+		}
+	} 
+		
 	
 }());
 
