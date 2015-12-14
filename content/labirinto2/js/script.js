@@ -407,6 +407,7 @@
 			if(orbs.length > 0){
 				if(hitTestRectangle(hero,orb)){
 					var pick = document.createElement("audio");
+					pick.play();
 					pick.src = "sound/pick.mp3";
 					pick.addEventListener("canplaythrough",function(){
 						pick.play();
