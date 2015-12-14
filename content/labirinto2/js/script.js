@@ -286,7 +286,6 @@
 							var zmb = new EnemyObject(zombieImg,0,0,OBJECTSIZE,OBJECTSIZE,posX + (MAPCELLSIZE/2) - OBJECTSIZE/2, posY + (MAPCELLSIZE/2) - OBJECTSIZE/2);
 							zmb.speed = 1;
 							zmb.hunt = trueOrFalse();
-							alert(zmb.hunt);
 							sprites.push(zmb);
 							zombies.push(zmb);
 							break;
@@ -699,7 +698,7 @@
 	
 	function trueOrFalse(){
 		var number = Math.floor(Math.random() * 10)+1;
-		if(number < 8){
+		if(number < 7){
 			return false;
 		}
 		return true;
