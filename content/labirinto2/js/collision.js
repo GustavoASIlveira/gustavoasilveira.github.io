@@ -5,8 +5,8 @@ function hitTestRectangle(r1,r2){
 	var vy = r1.centerY() - r2.centerY();
 	
 	//Soma as metades das larguras e alturas
-	var combinedHalfWidths = r1.halfWidth() + r2.halfWidth();
-	var combinedHalfHeights = r1.halfHeight() + r2.halfHeight();
+	var combinedHalfWidths = (r1.halfWidth()-5) + (r2.halfWidth()-5);
+	var combinedHalfHeights = (r1.halfHeight()-2) + (r2.halfHeight()-2);
 
 	//Confere se houve colisão no eixo X
 	if(Math.abs(vx) < combinedHalfWidths && Math.abs(vy) < combinedHalfHeights){		
