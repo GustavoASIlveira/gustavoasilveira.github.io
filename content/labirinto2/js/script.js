@@ -85,6 +85,12 @@
 	startImg.src = "img/startimg.png";
 	assetsToLoad.push(startImg);
 	
+	//músicas
+	var music1 = document.querySelector("#music1");
+	
+	var music2 = document.querySelector("#music2");
+	
+	
 	//função para exibir a tela inicial
 	function loadHandler(){
 		loadedAssets++;
@@ -256,6 +262,7 @@
 			case ENTER:
 				if(gameState === START && !endGame){
 					gameState = BUILD_MAP;
+					music1.pause();
 				} else 
 				if(endGame){
 					restartGame();
@@ -311,6 +318,7 @@
 				break;
 			case START:
 				ctx.drawImage(startImg,0,0,cnv.width,cnv.height,0,0,cnv.width,cnv.height);
+				music1.play();
 				break;
 			case BUILD_MAP:
 				buildMap(map);
@@ -319,6 +327,7 @@
 				if(!timer.isOn){
 					timer.start();
 				}
+				music2.play();
 				window.requestAnimationFrame(render,cnv);
 				update();
 				break;
@@ -564,6 +573,7 @@
 		if(!endGame){
 			endGame = true;
 			timer.stop();
+			music2.pause();
 			timer.isOn = false;
 			if(score === scoreToWin){
 				gameOverMessage.text = "YOU WIN!";
@@ -593,6 +603,8 @@
 		setTimeout(function(){
 			endGame = false;
 		},1000);
+		music1.currentTime = 0;
+		music2.currentTime = 0;
 	}
 	
 	//muda a posição do zumbi
