@@ -393,7 +393,7 @@
 	
 	//efeitos sonoros do jogo
 	function playSound(soundType){
-		var sound = document.createElement("audio");
+		var sound = new Audio("audio");
 		if(soundType === EXPLOSION){
 			sound.src = "sound/explosion.mp3";
 		} else {
