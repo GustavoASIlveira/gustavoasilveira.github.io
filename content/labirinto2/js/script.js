@@ -415,8 +415,7 @@
 			var orb = orbs[i];
 			if(orbs.length > 0){
 				if(hitTestRectangle(hero,orb)){
-					var pick = document.createElement("audio");
-					pick.src = "sound/pick.mp3";
+					var pick = new Audio("sound/pick.mp3");
 					pick.addEventListener("canplaythrough",function(){
 						pick.play();
 					},false);
@@ -726,9 +725,8 @@
 	function playZombieSound(zombie){
 		if(zombie.x > camera.x && zombie.y > camera.y && zombie.x + zombie.width < camera.x + camera.width && zombie.y + zombie.height < camera.y + camera.height){
 			if(!zombie.mkNoise){
-				var zSound = document.createElement("audio");
 				var n = Math.floor(Math.random()*3)+1;
-					zSound.src = "sound/" + n + ".mp3";
+					var zSound = new Audio("sound/" + n + ".mp3");
 					zSound.addEventListener("canplaythrough",function(){
 						zSound.play();
 					},false);
