@@ -12,9 +12,7 @@
 	
 	
 	//RECURSOS DO JOGO ========================================================>
-	//música
-	var music = document.querySelector('#music');
-	
+
 	//arrays
 	var sprites = [];
 	var assetsToLoad = [];
@@ -67,6 +65,23 @@
 	assetsToLoad.push(img);
 	//contador de recursos
 	var loadedAssets = 0;
+	
+	//música e sons
+	var music = document.querySelector('#music');
+	music.load();
+	music.addEventListener('canplaythrough',loadHandler,false);
+	assetsToLoad.push(music);
+	
+	var fireSound = new Audio("sound/fire.mp3");
+	fireSound.preload = "auto";
+	fireSound.load();
+	fireSound.addEventListener('canplaythrough',loadHandler,false);
+	assetsToLoad.push(fireSound);
+	
+	var explosionSound = new Audio("sound/explosion.mp3");
+	explosionSound.preload = "auto";
+	explosionSound.addEventListener('canplaythrough',loadHandler,false);
+	assetsToLoad.push(explosionSound);
 	
 	
 	//entradas
@@ -176,8 +191,13 @@
 	
 	function loadHandler(){
 		loadedAssets++;
+		console.log(loadedAssets);
 		if(loadedAssets === assetsToLoad.length){
-			img.removeEventListener('load',loadHandler,false);
+			for(var i in assetsToLoad){
+				var asset = assetsToLoad[i];
+				asset.removeEventListener('load',loadHandler,false);
+				asset.removeEventListener('canplaythrough',loadHandler,false);
+			}
 			//inicia o jogo
 			setTimeout(function(){
 				gameState = PAUSED;
@@ -393,7 +413,7 @@
 	
 	//efeitos sonoros do jogo
 	function playSound(soundType){
-		var sound = new Audio("audio");
+		var sound = new Audio();
 		if(soundType === EXPLOSION){
 			sound.src = "sound/explosion.mp3";
 		} else {
