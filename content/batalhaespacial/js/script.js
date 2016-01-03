@@ -68,17 +68,18 @@
 	
 	//música e sons
 	var music = document.querySelector('#music');
+	music.preload = "auto";
 	music.load();
 	music.addEventListener('canplaythrough',loadHandler,false);
 	assetsToLoad.push(music);
 	
-	var fireSound = new Audio("sound/fire.mp3");
+	var fireSound = document.querySelector('#fire');
 	fireSound.preload = "auto";
 	fireSound.load();
 	fireSound.addEventListener('canplaythrough',loadHandler,false);
 	assetsToLoad.push(fireSound);
 	
-	var explosionSound = new Audio("sound/explosion.mp3");
+	var explosionSound = document.querySelector('#explosion');
 	explosionSound.preload = "auto";
 	explosionSound.load();
 	explosionSound.addEventListener('canplaythrough',loadHandler,false);
@@ -192,6 +193,7 @@
 	
 	function loadHandler(){
 		loadedAssets++;
+		console.log(loadedAssets);
 		if(loadedAssets === assetsToLoad.length){
 			for(var i in assetsToLoad){
 				var asset = assetsToLoad[i];
