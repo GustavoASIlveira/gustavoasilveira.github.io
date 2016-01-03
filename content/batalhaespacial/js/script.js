@@ -80,6 +80,7 @@
 	
 	var explosionSound = new Audio("sound/explosion.mp3");
 	explosionSound.preload = "auto";
+	explosionSound.load();
 	explosionSound.addEventListener('canplaythrough',loadHandler,false);
 	assetsToLoad.push(explosionSound);
 	
@@ -191,7 +192,6 @@
 	
 	function loadHandler(){
 		loadedAssets++;
-		console.log(loadedAssets);
 		if(loadedAssets === assetsToLoad.length){
 			for(var i in assetsToLoad){
 				var asset = assetsToLoad[i];
