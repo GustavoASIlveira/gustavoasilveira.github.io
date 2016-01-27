@@ -134,7 +134,7 @@
 		}
 		
 		//faz a bola quicar no teto
-		if(ball.y < 0 && ball.vy < 0){
+		if(ball.y < ball.radius && ball.vy < 0){
 			ball.y = ball.radius;
 			ball.vy *= -1;
 		}
