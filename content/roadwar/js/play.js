@@ -16,6 +16,12 @@ var playState = {
 		
 		//cria o player, inicialmente com controles desabilitados e fora da tela.
 		this.player = game.add.sprite(game.world.centerX,650,'player');
+		
+		
+		this.player.animations.add('loaded',[0,1],5,true);
+		this.player.canShoot = true;
+		
+		
 		game.physics.arcade.enable(this.player);
 		this.player.anchor.set(.5);
 		this.player.canPlay = false;
@@ -102,6 +108,12 @@ var playState = {
 		
 		if(this.player.canPlay){
 			this.movePlayer();
+		}
+		
+		if(this.player.canShoot){
+			this.player.animations.play('loaded');
+		} else {
+			this.player.frame = 2;
 		}
 		
 		if(this.fireButton.isDown){
@@ -286,6 +298,11 @@ var playState = {
 				bullet.body.velocity.y = -500;
 				bullet.checkWorldBounds = true;
 				bullet.outOfBoundsKill = true;
+				
+			this.player.canShoot = false;
+			game.time.events.add(2000,function(){
+				this.player.canShoot = true;
+			},this);
 		}
 	},
 	
