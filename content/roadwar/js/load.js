@@ -18,6 +18,11 @@ var loadState = {
 		game.load.image('bullet','img/bullet.png');
 		game.load.image('gas','img/gas.png');
 		game.load.spritesheet('boom','img/boom.png',64,64);
+		game.load.audio('sndBullet','sound/rlaunch.ogg');
+		game.load.audio('sndItem','sound/getitem.ogg');
+		game.load.audio('sndExplosion','sound/DeathFlash.ogg');
+		game.load.audio('stg1Music','sound/TheWreck.ogg');
+		game.load.audio('introMusic','sound/ente_evil.ogg');
 	},
 	
 	create: function(){

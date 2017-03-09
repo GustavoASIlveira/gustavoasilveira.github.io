@@ -1,5 +1,9 @@
 var menuState = {
 	create: function(){
+		this.music = game.add.audio('introMusic');
+		this.music.loop = true;
+		this.music.volume = .5;
+		this.music.play();
 		game.add.image(0,0,'splash');
 	
 		//highScore
@@ -13,7 +17,7 @@ var menuState = {
 		var txtPressStart = game.add.text(game.world.centerX,650,'PRESS START',{font:'20px emulogic', fill: '#fff'});
 			txtPressStart.anchor.set(.5);
 			
-		var txtHighScore = game.add.text(game.world.centerX,450,'HIGH-SCORE: ' + game.global.highScore,{font:'20px emulogic', fill:'#F18808'});
+		var txtHighScore = game.add.text(game.world.centerX,450,'HIGH-SCORE: ' + localStorage.getItem('highScore'),{font:'20px emulogic', fill:'#F18808'});
 			txtHighScore.anchor.set(.5);
 			txtHighScore.alpha = 0;
 			
@@ -30,6 +34,7 @@ var menuState = {
 	},
 	
 	startGame: function(){
+		this.music.stop();
 		game.state.start('play');
 	}
 };

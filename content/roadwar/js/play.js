@@ -1,5 +1,10 @@
 var playState = {
 	create: function(){
+		this.music = game.add.audio('stg1Music');
+		this.music.loop = true;
+		this.music.volume = 0;
+		game.add.tween(this.music).to({volume:.3},1500).start();
+		this.music.play();
 		//cria a estrada (road) inicialmente transparente e que atinge 100% de opacidade em 1s 
 		this.road = game.add.tileSprite(0,0,400,600,'road');
 		this.road.alpha = 0;
@@ -25,12 +30,14 @@ var playState = {
 		},this);
 		
 		//FUEL
-		this.fuel = 50;
+		this.fuel = 30;
 		this.GAS = game.add.group();
 		this.GAS.enableBody = true;
 		game.time.events.loop(5000,function(){
 			this.createGAS();
 		},this);
+		this.itemSound = game.add.audio('sndItem');
+		this.itemSound.volume = .5;
 		
 		//cria o grupo de inimigos
 		this.enemies = game.add.group();
@@ -67,6 +74,9 @@ var playState = {
 		this.bullets.enableBody = true;
 		this.fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		this.bulletTime = game.time.now;
+		this.bulletSound = game.add.audio('sndBullet');
+		this.bulletSound.volume = .5;
+		this.explodeSound = game.add.audio('sndExplosion');
 		
 		//SCORE
 		this.score = 0;
@@ -104,7 +114,9 @@ var playState = {
 		}
 		
 		if(this.fuel <= 0){
-			this.killPlayer();
+			if(this.player.alive){
+				this.killPlayer();
+			}
 		}
 	},
 	
@@ -155,6 +167,7 @@ var playState = {
 	},
 	
 	getFuel: function(player,gas){
+		this.itemSound.play();
 		gas.kill();
 		this.fuel += 5;
 		this.txtFuel.text = 'FUEL:'+this.getTextFuel();
@@ -252,6 +265,7 @@ var playState = {
 	},
 	
 	explode: function(x,y){
+		this.explodeSound.play();
 		var boom = game.add.sprite(x,y,'boom');
 			boom.anchor.set(.5);
 			boom.animations.add('boom');
@@ -263,6 +277,7 @@ var playState = {
 			return;
 		}
 		if(game.time.now > this.bulletTime){
+			this.bulletSound.play();
 			this.bulletTime = game.time.now + 2000;
 			var x = this.player.x - 5;
 			var y = this.player.y - 10;
@@ -275,6 +290,7 @@ var playState = {
 	},
 	
 	backToMenu: function(){
+		this.music.stop();
 		game.state.start('menu');
 	}
 };
