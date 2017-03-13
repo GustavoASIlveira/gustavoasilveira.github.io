@@ -16,7 +16,9 @@ var loadState = {
 		game.load.image('enemy','img/enemy.png');
 		game.load.image('bullet','img/bullet.png');
 		game.load.image('gas','img/gas.png');
-		game.load.spritesheet('player','img/player.png',32,64);
+		game.load.image('skull','img/skull.png');
+		game.load.image('meter','img/meter.png');
+		game.load.spritesheet('player','img/player.png',38,67);
 		game.load.spritesheet('boom','img/boom.png',64,64);
 		game.load.audio('sndBullet','sound/rlaunch.ogg');
 		game.load.audio('sndItem','sound/getitem.ogg');

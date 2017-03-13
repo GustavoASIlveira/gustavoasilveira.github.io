@@ -14,14 +14,27 @@ var playState = {
 		this.clouds.alpha = 0;
 		game.add.tween(this.clouds).to({alpha:1},1000).start();
 		
+		//medidor
+		this.meter = game.add.sprite(10,50,'meter');
+		this.meter.alpha = 0;
+		game.add.tween(this.meter).to({alpha:1},1000).start();
+		
+		//marcador
+		this.timeToGoal = 90;
+		this.skull = game.add.sprite(10,this.timeToGoal * 5 + 66,'skull');
+		this.skull.anchor.set(0,.5);
+		this.skull.alpha = 0;
+		game.add.tween(this.skull).to({alpha:1},1000).start();
+		this.timer = game.time.events.loop(1000,function(){
+			this.timeToGoal--;
+		},this);
+		
+		
 		//cria o player, inicialmente com controles desabilitados e fora da tela.
 		this.player = game.add.sprite(game.world.centerX,650,'player');
-		
-		
-		this.player.animations.add('loaded',[0,1],5,true);
+		this.player.animations.add('empty',[0,1],5,true);
+		this.player.animations.add('loaded',[2,3],5,true);
 		this.player.canShoot = true;
-		
-		
 		game.physics.arcade.enable(this.player);
 		this.player.anchor.set(.5);
 		this.player.canPlay = false;
@@ -113,7 +126,7 @@ var playState = {
 		if(this.player.canShoot){
 			this.player.animations.play('loaded');
 		} else {
-			this.player.frame = 2;
+			this.player.animations.play('empty');
 		}
 		
 		if(this.fireButton.isDown){
@@ -125,10 +138,15 @@ var playState = {
 			this.addEnemy();
 		}
 		
-		if(this.fuel <= 0){
-			if(this.player.alive){
+		if(this.player.alive){
+			if(this.fuel <= 0){
 				this.killPlayer();
 			}
+			this.skull.y = this.timeToGoal * 5 + 66;
+		}
+		
+		if(this.timeToGoal < 1){
+			game.time.events.remove(this.timer);
 		}
 	},
 	
@@ -291,8 +309,8 @@ var playState = {
 		if(game.time.now > this.bulletTime){
 			this.bulletSound.play();
 			this.bulletTime = game.time.now + 2000;
-			var x = this.player.x - 5;
-			var y = this.player.y - 10;
+			var x = this.player.x - 4;
+			var y = this.player.y - 15;
 			var bullet = this.bullets.create(x,y,'bullet');
 				bullet.anchor.set(.5);
 				bullet.body.velocity.y = -500;
