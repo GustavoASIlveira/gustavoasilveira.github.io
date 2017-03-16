@@ -1,4 +1,4 @@
-var playState = {
+var lvl2State = {
 	create: function(){
 		this.music = game.add.audio('stg1Music');
 		this.music.loop = true;
@@ -21,7 +21,7 @@ var playState = {
 		
 		//marcador
 		this.timeToGoal = 90;
-		this.skull = game.add.sprite(10,this.timeToGoal * 5 + 66,'skull');
+		this.skull = game.add.sprite(11,this.timeToGoal * 5 + 66,'skull');
 		this.skull.anchor.set(0,.5);
 		this.skull.alpha = 0;
 		game.add.tween(this.skull).to({alpha:1},1000).start();
@@ -98,8 +98,8 @@ var playState = {
 		this.explodeSound = game.add.audio('sndExplosion');
 		
 		//SCORE
-		this.score = 0;
-		this.txtScore = game.add.text(5,5,'SCORE:' + this.getTextScore(),{font:'15px emulogic', fill:'#fff'});
+		this.score = game.global.score;
+		this.txtScore = game.add.text(5,5,'SCORE:' + this.getTextScore(this.score),{font:'15px emulogic', fill:'#fff'});
 		
 		//FUEL TEXT
 		this.txtFuel = game.add.text(game.world.width - 5,5,'FUEL:'+this.getTextFuel(),{font:'15px emulogic',fill:'#fff'});
@@ -163,24 +163,24 @@ var playState = {
 		return 'WHAT?!';
 	},
 	
-	getTextScore: function(){
+	getTextScore: function(score){
 		if(this.score < 10){
-			return '00000'+this.score;
+			return '00000'+ score;
 		}
 		if(this.score < 100){
-			return '0000'+this.score;
+			return '0000'+ score;
 		}
 		if(this.score < 1000){
-			return '000'+this.score;
+			return '000'+ score;
 		}
 		if(this.score < 10000){
-			return '00'+this.score;
+			return '00'+ score;
 		}
 		if(this.score < 100000){
-			return '0'+this.score;
+			return '0'+ score;
 		}
 		if(this.score < 1000000){
-			return this.score;
+			return score;
 		}
 		return 'ROADKILLER';
 	},
@@ -206,7 +206,7 @@ var playState = {
 	
 	getPoints: function(){
 		this.score += 5;
-		this.txtScore.text = 'SCORE:'+this.getTextScore();
+		this.txtScore.text = 'SCORE:'+this.getTextScore(this.score);
 	},
 	
 	movePlayer: function(){

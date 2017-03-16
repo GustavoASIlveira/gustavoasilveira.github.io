@@ -5,6 +5,7 @@ var menuState = {
 		this.music.volume = .5;
 		this.music.play();
 		game.add.image(0,0,'splash');
+		game.global.score = 0;
 	
 		//highScore
 		if(!localStorage.getItem('highScore')){
@@ -35,6 +36,6 @@ var menuState = {
 	
 	startGame: function(){
 		this.music.stop();
-		game.state.start('play');
+		game.state.start('lvl1');
 	}
 };

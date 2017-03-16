@@ -7,6 +7,7 @@ var game = new Phaser.Game(400,600,Phaser.CANVAS);
 	game.state.add('boot',bootState);
 	game.state.add('load',loadState);
 	game.state.add('menu',menuState);
-	game.state.add('play',playState);
+	game.state.add('lvl1',lvl1State);
+	game.state.add('lvl2',lvl2State);
 	
 	game.state.start('boot');
