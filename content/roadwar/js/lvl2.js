@@ -10,9 +10,7 @@ var lvl2State = {
 		this.road.alpha = 0;
 		game.add.tween(this.road).to({alpha:1},1000).start();
 		
-		this.clouds = game.add.tileSprite(0,0,400,600,'clouds');
-		this.clouds.alpha = 0;
-		game.add.tween(this.clouds).to({alpha:1},1000).start();
+		
 		
 		//medidor
 		this.meter = game.add.sprite(10,50,'meter');
@@ -37,6 +35,7 @@ var lvl2State = {
 		this.player.canShoot = true;
 		game.physics.arcade.enable(this.player);
 		this.player.anchor.set(.5);
+		this.player.body.setSize(28,58,5,5);
 		this.player.canPlay = false;
 		//em 0.5s o player começa a entrar na tela, alcançando seu ponto ideal aos 2s
 		game.time.events.add(500,function(){
@@ -64,6 +63,13 @@ var lvl2State = {
 		this.enemies.createMultiple(10,'enemy');
 		//tempo para a criação de novos inimigos
 		this.enemyTime = game.time.now + 3000;
+		
+		//INIMIGO 2
+		this.enemies2 = game.add.group();
+		this.enemies2.enableBody = true;
+		game.time.events.loop(9000,function(){
+			this.addEnemies2();
+		},this);
 		
 		//cria bloqeios nas laterais para os inimigos
 		this.blocks = game.add.group();
@@ -97,6 +103,11 @@ var lvl2State = {
 		this.bulletSound.volume = .5;
 		this.explodeSound = game.add.audio('sndExplosion');
 		
+		//NÉVOA
+		this.clouds = game.add.tileSprite(0,0,400,600,'clouds');
+		this.clouds.alpha = 0;
+		game.add.tween(this.clouds).to({alpha:1},1000).start();
+		
 		//SCORE
 		this.score = game.global.score;
 		this.txtScore = game.add.text(5,5,'SCORE:' + this.getTextScore(this.score),{font:'15px emulogic', fill:'#fff'});
@@ -113,9 +124,14 @@ var lvl2State = {
 	update: function(){
 		game.physics.arcade.collide(this.enemies,this.enemies);
 		game.physics.arcade.collide(this.enemies,this.blocks);
+		game.physics.arcade.collide(this.enemies2,this.blocks);
 		game.physics.arcade.overlap(this.player,this.enemies,this.killPlayer,null,this);
+		game.physics.arcade.overlap(this.player,this.enemies2,this.killPlayer,null,this);
 		game.physics.arcade.overlap(this.bullets,this.enemies,this.killEnemy,null,this);
+		game.physics.arcade.overlap(this.enemies2,this.enemies,this.killEnemy,null,this);
+		game.physics.arcade.overlap(this.bullets,this.enemies2,this.killEnemy,null,this);
 		game.physics.arcade.overlap(this.player,this.GAS,this.getFuel,null,this);
+		
 		this.road.tilePosition.y += 5;
 		this.clouds.tilePosition.y += 7;
 		
@@ -201,11 +217,11 @@ var lvl2State = {
 		gas.kill();
 		this.fuel += 5;
 		this.txtFuel.text = 'FUEL:'+this.getTextFuel();
-		this.getPoints();
+		this.getPoints(5);
 	},
 	
-	getPoints: function(){
-		this.score += 5;
+	getPoints: function(poits){
+		this.score += poits;
 		this.txtScore.text = 'SCORE:'+this.getTextScore(this.score);
 	},
 	
@@ -258,13 +274,38 @@ var lvl2State = {
 		}
 	},
 	
+	addEnemies2: function(){
+		var x = Math.floor(Math.random() * 208) + 76;
+		var enemy2 = this.enemies2.create(x,0,'enemy2');
+			enemy2.animations.add('broke',[1,2],5,true);
+			enemy2.anchor.set(0,1);
+			enemy2.body.velocity.y = 100;
+			enemy2.checkWorldBounds = true;
+			enemy2.outOfBoundsKill = true;
+			enemy2.hitPoints = 1;
+	},
+	
 	killEnemy: function(bullet,enemy){
 		var x = enemy.x + enemy.width/2;
 		var y = enemy.y - enemy.height/2;
-		bullet.kill();
-		enemy.kill();
 		this.explode(x,y);
-		this.getPoints();
+		if(enemy.hitPoints > 0){
+			enemy.animations.play('broke');
+			enemy.hitPoints--;
+		} else {
+			enemy.kill();
+			if(enemy.key === 'enemy2'){
+				game.time.events.add(250,function(){
+					this.explode(x,y-20);
+				},this);
+			}
+			
+		}
+		
+		if(bullet.key === 'bullet'){
+			bullet.kill();
+			this.getPoints(enemy.key === 'enemy' ? 5 : 50);
+		}	
 	},
 	
 	killPlayer: function(){

@@ -20,6 +20,7 @@ var loadState = {
 		game.load.image('meter','img/meter.png');
 		game.load.spritesheet('player','img/player.png',38,67);
 		game.load.spritesheet('boom','img/boom.png',64,64);
+		game.load.spritesheet('enemy2','img/strongCar.png',40,78);
 		game.load.audio('sndBullet','sound/rlaunch.ogg');
 		game.load.audio('sndItem','sound/getitem.ogg');
 		game.load.audio('sndExplosion','sound/DeathFlash.ogg');
