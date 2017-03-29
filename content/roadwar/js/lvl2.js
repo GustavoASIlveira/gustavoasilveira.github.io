@@ -63,6 +63,9 @@ var lvl2State = {
 		this.enemies.createMultiple(10,'enemy');
 		//tempo para a criação de novos inimigos
 		this.enemyTime = game.time.now + 3000;
+		//animções dos inimigos
+		this.enemies.callAll('animations.add', 'animations', 'run', [0, 1], 5, true);
+		this.enemies.callAll('animations.play', 'animations', 'run');
 		
 		//INIMIGO 2
 		this.enemies2 = game.add.group();

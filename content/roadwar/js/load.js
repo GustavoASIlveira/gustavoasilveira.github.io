@@ -13,12 +13,12 @@ var loadState = {
 		game.load.image('road','img/road.png');
 		game.load.image('clouds','img/clouds.png');
 		game.load.image('splash','img/splash.png');
-		game.load.image('enemy','img/enemy.png');
 		game.load.image('bullet','img/bullet.png');
 		game.load.image('gas','img/gas.png');
 		game.load.image('skull','img/skull.png');
 		game.load.image('meter','img/meter.png');
 		game.load.spritesheet('player','img/player.png',38,67);
+		game.load.spritesheet('enemy','img/enemy.png',38,64);
 		game.load.spritesheet('boom','img/boom.png',64,64);
 		game.load.spritesheet('enemy2','img/strongCar.png',40,78);
 		game.load.audio('sndBullet','sound/rlaunch.ogg');
