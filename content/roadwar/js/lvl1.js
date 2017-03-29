@@ -159,6 +159,7 @@ var lvl1State = {
 		game.time.events.remove(this.newGas);
 		game.time.events.remove(this.fuelLoop);
 		this.player.canPlay = false;
+		this.player.body.velocity.x = 0;
 		this.player.body.collideWorldBounds = false;
 		this.destroyEnemies();
 		this.destroyGAS();
