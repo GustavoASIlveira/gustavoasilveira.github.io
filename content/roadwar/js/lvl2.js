@@ -323,6 +323,8 @@ var lvl2State = {
 			game.global.highScore = this.score;
 		}
 		
+		game.global.score = 0;
+		
 		game.time.events.add(500,function(){
 			var txtGameOver = game.add.text(game.world.centerX,650,'GAME OVER',{font: '20px emulogic', fill:'#f00'});
 				txtGameOver.anchor.set(.5);
