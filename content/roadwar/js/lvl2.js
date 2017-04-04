@@ -10,7 +10,8 @@ var lvl2State = {
 		this.road.alpha = 0;
 		game.add.tween(this.road).to({alpha:1},1000).start();
 		
-		
+		//continue
+		this.tryAgain = true;
 		
 		//medidor
 		this.meter = game.add.sprite(10,50,'meter');
@@ -325,15 +326,46 @@ var lvl2State = {
 		game.time.events.add(500,function(){
 			var txtGameOver = game.add.text(game.world.centerX,650,'GAME OVER',{font: '20px emulogic', fill:'#f00'});
 				txtGameOver.anchor.set(.5);
-			game.add.tween(txtGameOver).to({y: game.world.centerY},1000).start();
+			game.add.tween(txtGameOver).to({y: game.world.centerY - 50},1000).start();
+		},this);
+		
+		game.time.events.add(1000,function(){
+			var txtGameOver = game.add.text(game.world.centerX,750,'CONTINUE',{font: '20px emulogic', fill:'#f00'});
+				txtGameOver.anchor.set(.5);
+			game.add.tween(txtGameOver).to({y: game.world.centerY + 50},1000).start();
 		},this);
 		
 		game.time.events.add(2000,function(){
+			var txtYes = game.add.text(game.world.centerX - 50,game.world.centerY + 100,'YES',{font: '20px emulogic', fill:'#f00'});
+				txtYes.anchor.set(1,.5);
+			var blinkingYes = game.add.tween(txtYes).to({alpha: 0},300).to({alpha: 1},300).loop().start();
+			var txtNo = game.add.text(game.world.centerX + 50,game.world.centerY + 100,'NO',{font: '20px emulogic', fill:'#f00'});
+				txtNo.anchor.set(0,.5);
+			var blinkingNo;
+				
+			this.controls.left.onDown.add(function(){
+				if(!this.tryAgain){
+					this.tryAgain = true;
+					blinkingYes = game.add.tween(txtYes).to({alpha: 0},300).to({alpha: 1},300).loop().start();
+					blinkingNo.stop();
+					txtNo.alpha = 1;
+				}
+			},this);
+			
+			this.controls.right.onDown.add(function(){
+				if(this.tryAgain){
+					this.tryAgain = false;
+					blinkingNo = game.add.tween(txtNo).to({alpha: 0},300).to({alpha: 1},300).loop().start();
+					blinkingYes.stop();
+					txtYes.alpha = 1;
+				}
+			},this);
+		
 			var enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 				enterKey.onDown.addOnce(this.backToMenu,this);
 		},this);
 		
-		game.time.events.add(7000,function(){
+		game.time.events.add(10000,function(){
 			this.backToMenu();
 		},this);
 	},
@@ -370,6 +402,10 @@ var lvl2State = {
 	
 	backToMenu: function(){
 		this.music.stop();
-		game.state.start('menu');
+		if(this.tryAgain){
+			game.state.start('lvl2');
+		} else {
+			game.state.start('menu');
+		}
 	}
 };
