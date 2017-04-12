@@ -42,6 +42,7 @@ var stage1State = {
 					this.player = game.add.sprite(x + 25, y + 25,'player');
 					this.player.anchor.set(.5);
 					game.physics.arcade.enable(this.player);
+					this.player.body.setSize(18,32,3,0);
 					this.player.animations.add('goDown',[0,1,2,3,4,5,6,7],12,true);
 					this.player.animations.add('goUp',[8,9,10,11,12,13,14,15],12,true);
 					this.player.animations.add('goLeft',[16,17,18,19,20,21,22,23],12,true);
@@ -77,6 +78,7 @@ var stage1State = {
 		this.enemy = game.add.sprite(75,75,'enemy');
 		game.physics.arcade.enable(this.enemy);
 		this.enemy.anchor.set(.5);
+		this.enemy.body.setSize(20,36,2,4);
 		this.enemy.animations.add('goDown',[0,1,2,3,4,5,6,7],12,true);
 		this.enemy.animations.add('goUp',[8,9,10,11,12,13,14,15],12,true);
 		this.enemy.animations.add('goLeft',[16,17,18,19,20,21,22,23],12,true);
