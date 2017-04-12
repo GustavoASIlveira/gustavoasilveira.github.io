@@ -20,6 +20,12 @@ var stage1State = {
 		], 
 	
 		this.controls = game.input.keyboard.createCursorKeys();
+		game.input.keyboard.addKeyCapture([
+			Phaser.Keyboard.LEFT,
+			Phaser.Keyboard.RIGHT,
+			Phaser.Keyboard.UP,
+			Phaser.Keyboard.DOWN
+		]);
 		
 		game.add.sprite(0,0,'bg');
 		

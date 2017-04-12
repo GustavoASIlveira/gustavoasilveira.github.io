@@ -8,14 +8,14 @@ var menuState = {
 		//score
 		game.global.score = 0;
 		//highScore
-		if(!localStorage.getItem('highScore')){
-			localStorage.setItem('highScore',0);
+		if(!localStorage.getItem('labirinto3_highScore')){
+			localStorage.setItem('labirinto3_highScore',0);
 		}
 		
-		if(game.global.highScore > localStorage.getItem('highScore')){
-			localStorage.setItem('highScore',game.global.highScore);
+		if(game.global.highScore > localStorage.getItem('labirinto3_highScore')){
+			localStorage.setItem('labirinto3_highScore',game.global.highScore);
 		} else {
-			game.global.highScore = localStorage.getItem('highScore');
+			game.global.highScore = localStorage.getItem('labirinto3_highScore');
 		}
 	
 		var txtLabirinto = game.add.text(game.world.centerX, 150,'LABIRINTO',{font:'40px emulogic',fill:'#fff'});
@@ -24,7 +24,7 @@ var menuState = {
 		var txtPressStart = game.add.text(game.world.centerX,550,'PRESS START',{font:'20px emulogic', fill: '#fff'});
 			txtPressStart.anchor.set(.5);
 			
-		var txtHighScore = game.add.text(game.world.centerX,350,'HIGH-SCORE: ' + this.getText(localStorage.getItem('highScore')),{font:'20px emulogic', fill:'#F18808'});
+		var txtHighScore = game.add.text(game.world.centerX,350,'HIGH-SCORE: ' + this.getText(localStorage.getItem('labirinto3_highScore')),{font:'20px emulogic', fill:'#F18808'});
 			txtHighScore.anchor.set(.5);
 			txtHighScore.alpha = 0;
 			

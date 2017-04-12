@@ -1,4 +1,4 @@
-var game = new Phaser.Game(750,500,Phaser.CANVAS);
+var game = new Phaser.Game(750,500,Phaser.CANVAS,'gameContainer');
 
 	game.global = {
 		highScore: 0

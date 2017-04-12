@@ -16,5 +16,12 @@
 }
 
 body{
-	background-color: #ccc;
+	background-color: #555;
+}
+
+#gameContainer{
+	width: 750px;
+	height: 500px;
+	border: 1px solid #fff;
+	margin: 10px auto;
 }
