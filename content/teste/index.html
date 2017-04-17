@@ -58,25 +58,25 @@
 	document.body.appendChild(btnLeft);
 	document.body.appendChild(btnRight);
 	
-	btnLeft.addEventListener('mousedown',function(e){
+	btnLeft.addEventListener('touchstart',function(e){
 		e.preventDefault();
 		obj.mvLeft = true;
 		return;
 	});
 	
-	btnLeft.addEventListener('mouseup',function(e){
+	btnLeft.addEventListener('touchend',function(e){
 		e.preventDefault();
 		obj.mvLeft = false;
 		return;
 	});
 	
-	btnRight.addEventListener('mousedown',function(e){
+	btnRight.addEventListener('touchstart',function(e){
 		e.preventDefault();
 		obj.mvRight = true;
 		return;
 	});
 	
-	btnRight.addEventListener('mouseup',function(e){
+	btnRight.addEventListener('touchend',function(e){
 		e.preventDefault();
 		obj.mvRight = false;
 		return;
