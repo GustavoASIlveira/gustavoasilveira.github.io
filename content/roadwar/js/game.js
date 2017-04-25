@@ -1,4 +1,4 @@
-var game = new Phaser.Game(400,600,Phaser.CANVAS);
+var game = new Phaser.Game(400,600,Phaser.CANVAS,'gameContainer');
 
 	game.global = {
 		highScore: 0
@@ -9,5 +9,6 @@ var game = new Phaser.Game(400,600,Phaser.CANVAS);
 	game.state.add('menu',menuState);
 	game.state.add('lvl1',lvl1State);
 	game.state.add('lvl2',lvl2State);
+	game.state.add('end',endState);
 	
 	game.state.start('boot');

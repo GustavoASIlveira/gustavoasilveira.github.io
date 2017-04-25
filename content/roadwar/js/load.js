@@ -14,8 +14,10 @@ var loadState = {
 		game.load.image('clouds','img/clouds.png');
 		game.load.image('splash','img/splash.png');
 		game.load.image('bullet','img/bullet.png');
+		game.load.image('bossBullet','img/bossBullet.png');
 		game.load.image('gas','img/gas.png');
 		game.load.image('skull','img/skull.png');
+		game.load.image('tank','img/tank.png');
 		game.load.image('meter','img/meter.png');
 		game.load.spritesheet('player','img/player.png',38,67);
 		game.load.spritesheet('enemy','img/enemy.png',38,64);

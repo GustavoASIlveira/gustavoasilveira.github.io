@@ -52,7 +52,7 @@ var lvl2State = {
 		this.fuel = 30;
 		this.GAS = game.add.group();
 		this.GAS.enableBody = true;
-		game.time.events.loop(5000,function(){
+		this.newGas = game.time.events.loop(5000,function(){
 			this.createGAS();
 		},this);
 		this.itemSound = game.add.audio('sndItem');
@@ -71,9 +71,25 @@ var lvl2State = {
 		//INIMIGO 2
 		this.enemies2 = game.add.group();
 		this.enemies2.enableBody = true;
-		game.time.events.loop(9000,function(){
+		this.enemy2Timer = game.time.events.loop(9000,function(){
 			this.addEnemies2();
 		},this);
+		
+		//BOSS
+		this.boss = game.add.sprite(game.world.centerX, -100,'tank');
+		game.physics.arcade.enable(this.boss);
+		this.boss.anchor.set(.5);
+		this.boss.body.setSize(55,106,2,2);
+		this.boss.offGame = true;
+		this.boss.isDead = false;
+		this.boss.canBeShot = false;
+		this.boss.hp = 45;
+		this.boss.body.bounce.x = 1;
+		this.boss.shootingTime;
+		this.boss.attack = false;
+		//recursos para o Boss atirar
+		this.bossBullets = game.add.group();
+		this.bossBullets.enableBody = true;
 		
 		//cria bloqeios nas laterais para os inimigos
 		this.blocks = game.add.group();
@@ -128,13 +144,16 @@ var lvl2State = {
 	update: function(){
 		game.physics.arcade.collide(this.enemies,this.enemies);
 		game.physics.arcade.collide(this.enemies,this.blocks);
-		game.physics.arcade.collide(this.enemies2,this.blocks);
 		game.physics.arcade.overlap(this.player,this.enemies,this.killPlayer,null,this);
 		game.physics.arcade.overlap(this.player,this.enemies2,this.killPlayer,null,this);
+		game.physics.arcade.overlap(this.bossBullets,this.player,this.killPlayer,null,this);
 		game.physics.arcade.overlap(this.bullets,this.enemies,this.killEnemy,null,this);
 		game.physics.arcade.overlap(this.enemies2,this.enemies,this.killEnemy,null,this);
 		game.physics.arcade.overlap(this.bullets,this.enemies2,this.killEnemy,null,this);
 		game.physics.arcade.overlap(this.player,this.GAS,this.getFuel,null,this);
+		game.physics.arcade.overlap(this.bullets,this.boss,this.hitBoss,null,this);
+		game.physics.arcade.overlap(this.player,this.boss,this.killPlayer,null,this);
+		game.physics.arcade.collide(this.boss,this.blocks);
 		
 		this.road.tilePosition.y += 5;
 		this.clouds.tilePosition.y += 7;
@@ -143,17 +162,21 @@ var lvl2State = {
 			this.movePlayer();
 		}
 		
-		if(this.player.canShoot){
+		if(this.player.canShoot && this.player.canPlay){
 			this.player.animations.play('loaded');
 		} else {
 			this.player.animations.play('empty');
 		}
 		
 		if(this.fireButton.isDown){
-			this.fireBullet();
+			if(!this.boss.offGame && !this.boss.canBeShot){
+				return;
+			} else {
+				this.fireBullet();
+			}
 		}
 		
-		if(game.time.now > this.enemyTime){
+		if(game.time.now > this.enemyTime && this.boss.offGame){
 			this.enemyTime = game.time.now + Math.floor(Math.random() * 1501) + 500;
 			this.addEnemy();
 		}
@@ -162,12 +185,177 @@ var lvl2State = {
 			if(this.fuel <= 0){
 				this.killPlayer();
 			}
-			this.skull.y = this.timeToGoal * 5 + 66;
+		
+		
+			if(this.timeToGoal < 1 && this.player.canPlay){
+				if(this.boss.offGame){
+					this.bossArrive();
+				}
+			} else {
+				if(this.timeToGoal > 0){
+					this.skull.y = this.timeToGoal * 5 + 66;
+				}
+			}
+			
 		}
 		
-		if(this.timeToGoal < 1){
-			game.time.events.remove(this.timer);
+		if(this.boss.canBeShot && !this.boss.isDead){
+			if(this.boss.hp < 25){
+				this.moveBoss();
+			}
+			
+			if(this.boss.shootingTime < game.time.now){
+				this.boss.shootingTime = game.time.now + Math.floor(Math.random() * 1501) + 500;
+				this.bossShot();
+			}
 		}
+	},
+	
+	bossArrive: function(){
+		//Pausa alguns eventos
+		this.boss.offGame = false;
+		game.time.events.remove(this.timer);
+		game.time.events.remove(this.enemy2Timer);
+		this.destroyEnemies();
+		
+		//Ações iniciais do Boss
+		game.add.tween(this.boss).to({y:150},5000).start();
+		game.add.tween(this.skull).to({y:this.boss.hp * 10 + 66},5000).start();
+		game.time.events.add(5000,function(){
+			this.boss.canBeShot = true;
+			this.boss.body.velocity.x = Math.random() < .5 ? 100 : -100;
+			this.boss.shootingTime = game.time.now;
+		},this);
+	},
+	
+	moveBoss: function(){
+		if(!this.boss.attack && this.boss.y < 200){
+			this.boss.attack = true;
+		}
+		if(this.boss.attack){
+			this.boss.attack = false;
+			this.boss.body.velocity.y = 150;
+		}
+		if(this.boss.y > 500){
+			this.boss.body.velocity.y = 0;
+			game.add.tween(this.boss).to({y:150},3000).start();
+		}
+	},
+	
+	hitBoss: function(enemy,bullet){
+		if(!this.boss.isDead){
+			this.getPoints(10);
+			this.explode(bullet.x,bullet.y);
+		
+			bullet.kill();
+			this.boss.hp -= 5;
+			game.add.tween(this.skull).to({y:this.boss.hp * 10 + 66},500).start();
+			
+			if(this.boss.hp <= 0){
+				this.bossKill();
+			}
+		}
+	},
+	
+	bossShot: function(){
+		this.bulletSound.play();
+		var x = this.boss.x;
+		var y = this.boss.y + this.boss.height/2;
+		var bullet = this.bossBullets.create(x,y,'bossBullet');
+			bullet.anchor.set(.5);
+			bullet.body.velocity.y = 500;
+			bullet.checkWorldBounds = true;
+			bullet.outOfBoundsKill = true;
+	},
+	
+	bossKill: function(){
+		this.getPoints(500);
+		this.boss.offGame = true;
+		this.boss.isDead = true;
+		this.boss.body.velocity.x = 0;
+		this.boss.body.velocity.y = 0;
+		
+		var explosions = game.time.events.loop(500,function(){
+			var x = Math.floor(Math.random() * this.boss.width) + this.boss.x - this.boss.width/2;
+			var y = Math.floor(Math.random() * this.boss.height) + this.boss.y - this.boss.height/2;
+			this.explode(x,y);
+		},this);
+		
+		game.time.events.add(5000,function(){
+			this.boss.kill();
+			game.time.events.remove(explosions);
+			this.endLevel();
+		},this);
+	},
+	
+	endLevel: function(){
+		game.time.events.remove(this.newGas);
+		game.time.events.remove(this.fuelLoop);
+		this.player.canPlay = false;
+		this.player.body.velocity.x = 0;
+		this.player.body.collideWorldBounds = false;
+		this.destroyGAS();
+	
+		game.time.events.add(1000,function(){
+			this.player.body.velocity.y = -200;
+		},this);
+	
+		var bonus = this.fuel * 5;
+		game.global.score = this.score + bonus;
+		if(game.global.score > game.global.highScore){
+			game.global.highScore = game.global.score;
+		}
+		
+		game.time.events.add(2000,function(){
+			var txtScore = game.add.text(game.world.centerX,game.world.centerY-100,'SCORE: ' + this.getTextScore(this.score),{font:'15px emulogic',fill:'#fff'})
+				txtScore.anchor.set(.5);
+		},this);
+		
+		game.time.events.add(2500,function(){
+			var txtBonus = game.add.text(game.world.centerX,game.world.centerY-50,'FUEL BONUS: ' + bonus,{font:'15px emulogic',fill:'#fff'})
+				txtBonus.anchor.set(.5);
+		},this);
+		
+		game.time.events.add(3000,function(){
+			var txtGlobalScore = game.add.text(game.world.centerX,game.world.centerY,'TOTAL SCORE: ' + this.getTextScore(game.global.score),{font:'15px emulogic',fill:'#fff'})
+				txtGlobalScore.anchor.set(.5);
+		},this);
+		
+		game.time.events.add(5000,function(){
+			game.add.tween(this.road).to({alpha:0},1000).start();
+			game.add.tween(this.music).to({volume:0},3000).start();
+			game.add.tween(this.meter).to({alpha:0},1000).start();
+			game.add.tween(this.skull).to({alpha:0},1000).start();
+		},this);
+		game.time.events.add(8000,function(){
+			this.music.stop();
+			game.state.start('end');
+		},this);
+	},
+	
+	destroyGAS: function(){
+		this.GAS.forEachAlive(function(gas){
+			var x = gas.x + gas.width/2;
+			var y = gas.y - gas.height/2;
+			gas.kill();
+			this.explode(x,y);
+		},this);
+	},
+	
+	destroyEnemies: function(){
+		this.enemies.forEachAlive(function(enemy){
+			var x = enemy.x + enemy.width/2;
+			var y = enemy.y - enemy.height/2;
+			enemy.kill();
+			this.explode(x,y);
+		},this);
+		
+		this.enemies2.forEachAlive(function(enemy){
+			var x = enemy.x + enemy.width/2;
+			var y = enemy.y - enemy.height/2;
+			enemy.kill();
+			this.explode(x,y);
+		},this);
 	},
 	
 	getTextFuel: function(){
@@ -308,11 +496,14 @@ var lvl2State = {
 		
 		if(bullet.key === 'bullet'){
 			bullet.kill();
-			this.getPoints(enemy.key === 'enemy' ? 5 : 50);
+			this.getPoints(enemy.key === 'enemy2' ? 5 : 50);
 		}	
 	},
 	
-	killPlayer: function(){
+	killPlayer: function(player,enemy){
+		if(enemy.key === 'bossBullet'){
+			enemy.kill();
+		}
 		game.time.events.remove(this.fuelLoop);
 		var x = this.player.x;
 		var y = this.player.y;

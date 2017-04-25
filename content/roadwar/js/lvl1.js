@@ -160,7 +160,6 @@ var lvl1State = {
 		game.time.events.remove(this.fuelLoop);
 		this.player.canPlay = false;
 		this.player.body.velocity.x = 0;
-		this.player.body.velocity.y = 0;
 		this.player.body.collideWorldBounds = false;
 		this.destroyEnemies();
 		this.destroyGAS();
