@@ -499,7 +499,7 @@ var lvl2State = {
 		
 		if(bullet.key === 'bullet'){
 			bullet.kill();
-			this.getPoints(enemy.key === 'enemy2' ? 5 : 50);
+			this.getPoints(enemy.key === 'enemy2' ? 50 : 5);
 		}	
 	},
 	
