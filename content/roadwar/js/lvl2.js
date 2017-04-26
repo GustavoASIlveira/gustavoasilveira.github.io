@@ -501,7 +501,7 @@ var lvl2State = {
 	},
 	
 	killPlayer: function(player,enemy){
-		if(enemy.key === 'bossBullet'){
+		if(enemy && enemy.key === 'bossBullet'){
 			enemy.kill();
 		}
 		game.time.events.remove(this.fuelLoop);
