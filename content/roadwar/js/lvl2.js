@@ -127,10 +127,10 @@ var lvl2State = {
 			this.timeToGoal--;
 		},this);
 		
-		var gauge = game.add.sprite(390,590,'gauge');
-			gauge.anchor.set(1);
-			gauge.alpha = 0;
-		game.add.tween(gauge).to({alpha:1},1000).start();
+		this.gauge = game.add.sprite(390,590,'gauge');
+		this.gauge.anchor.set(1);
+		this.gauge.alpha = 0;
+		game.add.tween(this.gauge).to({alpha:1},1000).start();
 		
 		this.pointer = game.add.sprite(360,578,'pointer');
 		this.pointer.anchor.set(.5);
@@ -336,6 +336,8 @@ var lvl2State = {
 		
 		game.time.events.add(5000,function(){
 			game.add.tween(this.road).to({alpha:0},1000).start();
+			game.add.tween(this.gauge).to({alpha:0},1000).start();
+			game.add.tween(this.pointer).to({alpha:0},1000).start();
 			game.add.tween(this.music).to({volume:0},3000).start();
 			game.add.tween(this.meter).to({alpha:0},1000).start();
 			game.add.tween(this.skull).to({alpha:0},1000).start();
