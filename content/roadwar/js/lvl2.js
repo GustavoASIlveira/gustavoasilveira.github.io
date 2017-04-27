@@ -509,12 +509,12 @@ var lvl2State = {
 		
 		if(bullet.key === 'bullet'){
 			bullet.kill();
-			this.getPoints(enemy.key === 'enemy2' ? 5 : 50);
+			this.getPoints(enemy.key === 'enemy2' ? 50 : 5);
 		}	
 	},
 	
 	killPlayer: function(player,enemy){
-		if(enemy.key === 'bossBullet'){
+		if(enemy && enemy.key === 'bossBullet'){
 			enemy.kill();
 		}
 		game.time.events.remove(this.fuelLoop);
