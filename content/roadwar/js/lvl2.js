@@ -13,22 +13,6 @@ var lvl2State = {
 		//continue
 		this.tryAgain = true;
 		
-		//medidor
-		this.meter = game.add.sprite(10,50,'meter');
-		this.meter.alpha = 0;
-		game.add.tween(this.meter).to({alpha:1},1000).start();
-		
-		//marcador
-		this.timeToGoal = game.global.foundBoss ? 10 : 90;
-		this.skull = game.add.sprite(11,this.timeToGoal * 5 + 66,'skull');
-		this.skull.anchor.set(0,.5);
-		this.skull.alpha = 0;
-		game.add.tween(this.skull).to({alpha:1},1000).start();
-		this.timer = game.time.events.loop(1000,function(){
-			this.timeToGoal--;
-		},this);
-		
-		
 		//cria o player, inicialmente com controles desabilitados e fora da tela.
 		this.player = game.add.sprite(game.world.centerX,650,'player');
 		this.player.animations.add('empty',[0,1],5,true);
@@ -128,6 +112,33 @@ var lvl2State = {
 		this.clouds.alpha = 0;
 		game.add.tween(this.clouds).to({alpha:1},1000).start();
 		
+		//medidor
+		this.meter = game.add.sprite(10,50,'meter');
+		this.meter.alpha = 0;
+		game.add.tween(this.meter).to({alpha:1},1000).start();
+		
+		//marcador
+		this.timeToGoal = 90;
+		this.skull = game.add.sprite(11,this.timeToGoal * 5 + 66,'skull');
+		this.skull.anchor.set(0,.5);
+		this.skull.alpha = 0;
+		game.add.tween(this.skull).to({alpha:1},1000).start();
+		this.timer = game.time.events.loop(1000,function(){
+			this.timeToGoal--;
+		},this);
+		
+		var gauge = game.add.sprite(390,590,'gauge');
+			gauge.anchor.set(1);
+			gauge.alpha = 0;
+		game.add.tween(gauge).to({alpha:1},1000).start();
+		
+		this.pointer = game.add.sprite(360,578,'pointer');
+		this.pointer.anchor.set(.5);
+		this.pointer.angle = 80;
+		this.pointer.alpha = 0;		
+		game.add.tween(this.pointer).to({alpha:1},1000).start();
+		this.tweenPointer = game.add.tween(this.pointer).to({angle:-80},500).to({angle:80},1500);
+		
 		//SCORE
 		this.score = game.global.score;
 		this.txtScore = game.add.text(5,5,'SCORE:' + this.getTextScore(this.score),{font:'15px emulogic', fill:'#fff'});
@@ -217,9 +228,6 @@ var lvl2State = {
 		game.time.events.remove(this.timer);
 		game.time.events.remove(this.enemy2Timer);
 		this.destroyEnemies();
-		
-		//continue
-		game.global.foundBoss = true;
 		
 		//Ações iniciais do Boss
 		game.add.tween(this.boss).to({y:150},5000).start();
@@ -499,12 +507,12 @@ var lvl2State = {
 		
 		if(bullet.key === 'bullet'){
 			bullet.kill();
-			this.getPoints(enemy.key === 'enemy2' ? 50 : 5);
+			this.getPoints(enemy.key === 'enemy2' ? 5 : 50);
 		}	
 	},
 	
 	killPlayer: function(player,enemy){
-		if(enemy && enemy.key === 'bossBullet'){
+		if(enemy.key === 'bossBullet'){
 			enemy.kill();
 		}
 		game.time.events.remove(this.fuelLoop);
@@ -579,6 +587,7 @@ var lvl2State = {
 			return;
 		}
 		if(game.time.now > this.bulletTime){
+			this.tweenPointer.start();
 			this.bulletSound.play();
 			this.bulletTime = game.time.now + 2000;
 			var x = this.player.x - 4;

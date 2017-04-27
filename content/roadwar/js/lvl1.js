@@ -25,6 +25,17 @@ var lvl1State = {
 			this.timeToGoal--;
 		},this);
 		
+		var gauge = game.add.sprite(390,590,'gauge');
+			gauge.anchor.set(1);
+			gauge.alpha = 0;
+		game.add.tween(gauge).to({alpha:1},1000).start();
+		
+		this.pointer = game.add.sprite(360,578,'pointer');
+		this.pointer.anchor.set(.5);
+		this.pointer.angle = 80;
+		this.pointer.alpha = 0;		
+		game.add.tween(this.pointer).to({alpha:1},1000).start();
+		this.tweenPointer = game.add.tween(this.pointer).to({angle:-80},500).to({angle:80},1500);
 		
 		//cria o player, inicialmente com controles desabilitados e fora da tela.
 		this.player = game.add.sprite(game.world.centerX,650,'player');
@@ -373,6 +384,7 @@ var lvl1State = {
 			return;
 		}
 		if(game.time.now > this.bulletTime){
+			this.tweenPointer.start();
 			this.bulletSound.play();
 			this.bulletTime = game.time.now + 2000;
 			var x = this.player.x - 4;
