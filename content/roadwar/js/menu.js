@@ -6,7 +6,7 @@ var menuState = {
 		this.music.play();
 		game.add.image(0,0,'splash');
 		game.global.score = 0;
-		game.global.foundBoss = false;
+		game.global.foundEnemy = false;
 	
 		//highScore
 		if(!localStorage.getItem('highScore')){

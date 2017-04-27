@@ -118,7 +118,7 @@ var lvl2State = {
 		game.add.tween(this.meter).to({alpha:1},1000).start();
 		
 		//marcador
-		this.timeToGoal = 90;
+		this.timeToGoal = game.global.foundEnemy ? 10 : 90;
 		this.skull = game.add.sprite(11,this.timeToGoal * 5 + 66,'skull');
 		this.skull.anchor.set(0,.5);
 		this.skull.alpha = 0;
@@ -223,6 +223,8 @@ var lvl2State = {
 	},
 	
 	bossArrive: function(){
+		game.global.foundEnemy = true;
+	
 		//Pausa alguns eventos
 		this.boss.offGame = false;
 		game.time.events.remove(this.timer);
