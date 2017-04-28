@@ -25,12 +25,18 @@ var lvl1State = {
 			this.timeToGoal--;
 		},this);
 		
-		var gauge = game.add.sprite(390,590,'gauge');
-			gauge.anchor.set(1);
-			gauge.alpha = 0;
-		game.add.tween(gauge).to({alpha:1},1000).start();
+		this.glow = game.add.sprite(0,585,'glow');
+		this.glow.animations.add('glowing',[0,1],5,true);
+		this.glow.anchor.set(0,1);
+		this.glow.alpha = 0;
+		game.add.tween(this.glow).to({alpha:1},1000).start();
 		
-		this.pointer = game.add.sprite(360,578,'pointer');
+		this.gauge = game.add.sprite(10,580,'gauge');
+		this.gauge.anchor.set(0,1);
+		this.gauge.alpha = 0;
+		game.add.tween(this.gauge).to({alpha:1},1000).start();
+		
+		this.pointer = game.add.sprite(40,568,'pointer');
 		this.pointer.anchor.set(.5);
 		this.pointer.angle = 80;
 		this.pointer.alpha = 0;		
@@ -133,10 +139,13 @@ var lvl1State = {
 			this.movePlayer();
 		}
 		
-		if(this.player.canShoot){
+		if(this.player.canShoot && this.player.canPlay){
 			this.player.animations.play('loaded');
+			this.glow.animations.play('glowing');
 		} else {
 			this.player.animations.play('empty');
+			this.glow.animations.stop();
+			this.glow.frame = 1;
 		}
 		
 		if(this.fireButton.isDown){
@@ -171,6 +180,7 @@ var lvl1State = {
 		game.time.events.remove(this.fuelLoop);
 		this.player.canPlay = false;
 		this.player.body.velocity.x = 0;
+		this.player.body.velocity.y = 0;
 		this.player.body.collideWorldBounds = false;
 		this.destroyEnemies();
 		this.destroyGAS();
@@ -202,6 +212,9 @@ var lvl1State = {
 			game.add.tween(this.music).to({volume:0},3000).start();
 			game.add.tween(this.meter).to({alpha:0},1000).start();
 			game.add.tween(this.skull).to({alpha:0},1000).start();
+			game.add.tween(this.gauge).to({alpha:0},1000).start();
+			game.add.tween(this.pointer).to({alpha:0},1000).start();
+			game.add.tween(this.glow).to({alpha:0},1000).start();
 		},this);
 		game.time.events.add(8000,function(){
 			this.music.stop();
