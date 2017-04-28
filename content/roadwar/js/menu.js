@@ -9,17 +9,17 @@ var menuState = {
 		game.global.foundEnemy = false;
 	
 		//highScore
-		if(!localStorage.getItem('highScore')){
-			localStorage.setItem('highScore',0);
+		if(!localStorage.getItem('roadWarHighScore')){
+			localStorage.setItem('roadWarHighScore',0);
 		}
-		if(game.global.highScore > localStorage.getItem('highScore')){
-			localStorage.setItem('highScore',game.global.highScore);
+		if(game.global.highScore > localStorage.getItem('roadWarHighScore')){
+			localStorage.setItem('roadWarHighScore',game.global.highScore);
 		}
 	
 		var txtPressStart = game.add.text(game.world.centerX,650,'PRESS START',{font:'20px emulogic', fill: '#fff'});
 			txtPressStart.anchor.set(.5);
 			
-		var txtHighScore = game.add.text(game.world.centerX,450,'HIGH-SCORE: ' + localStorage.getItem('highScore'),{font:'20px emulogic', fill:'#F18808'});
+		var txtHighScore = game.add.text(game.world.centerX,450,'HIGH-SCORE: ' + localStorage.getItem('roadWarHighScore'),{font:'20px emulogic', fill:'#F18808'});
 			txtHighScore.anchor.set(.5);
 			txtHighScore.alpha = 0;
 			
