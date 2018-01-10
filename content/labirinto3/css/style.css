@@ -1,0 +1,27 @@
+*{
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+@font-face{
+	font-family: emulogic;
+	src: url("emulogic.ttf");
+}
+
+.hiddenText{
+	font-family: emulogic;
+	position: absolute;
+	visibility: hidden;
+}
+
+body{
+	background-color: #555;
+}
+
+#gameContainer{
+	width: 750px;
+	height: 500px;
+	border: 1px solid #fff;
+	margin: 10px auto;
+}

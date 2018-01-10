@@ -1,0 +1,50 @@
+@font-face{
+	font-family: emulogic;
+	src: url("emulogic.ttf");
+}
+*{
+	margin:0;
+	padding:0;
+}
+body{
+	background-color: #000;
+}
+#container{
+	position: relative;
+	margin: 10px auto;
+	width: 360px;
+	height: 360px;
+	border: inset #ccf;
+	border-radius: 5px;
+}
+.btn{
+	position: relative;
+	width: 80px;
+	height: 80px;
+	background-color: #555;
+	cursor: pointer; 
+	border: outset 2px;
+	border-radius: 10px;
+}
+.btn:hover{
+	background-color: #000;
+}
+.btn:active{
+	border: inset 2px;
+}
+#up{
+	top: 10px;
+	left: 10px;
+}
+#down{
+	top: 20px;
+	left: 10px;
+}
+#right{
+	top: -200px;
+	left: 260px;
+}
+#left{
+	top: -116px;
+	left: 160px;
+}
