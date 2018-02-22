@@ -1,0 +1,56 @@
+*{
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+body{
+	background-color: #555;
+}
+
+.panel{
+	width: 305px;
+	height: 305px;
+	border-radius: 10px;
+}
+
+.modal{
+	position: absolute;
+	top: -1px;
+	left: -1px;
+	transition: opacity 0.5s;
+}
+
+#container{
+	position: relative;
+	margin: 50px auto;
+	background-color: #ccc;
+	border: outset;
+	box-shadow: 2px 2px 5px rgba(0,0,0,1);
+}
+
+#startPanel{
+	background: url('../img/intro.png');
+	z-index: 5;
+	visibility: none;
+	opacity: 1;
+}
+
+#overPanel{
+	background: url('../img/win.png');
+	z-index: -5;
+	opacity: 0;
+}
+
+.btn{
+	width: 90px;
+	height: 90px;
+	position: absolute;
+	border-radius: 10px;
+	transition: left .5s, top .5s;
+}
+
+.btn:hover{
+	border: inset;
+	border-radius: 15px;
+}
