@@ -78,6 +78,15 @@ var Lv1State = {
 			this.move();
 		} else {
 			if(this.player.canAttack){
+				if(!this.player.canJump){
+					if(this.controls.left.isDown){
+						this.moveLeft();
+					} else
+					if(this.controls.right.isDown){
+						this.moveRight();
+					}
+				}
+				
 				this.player.animations.play('attack');
 				this.player.animations.currentAnim.onComplete.add(function(){
 					this.player.isAttacking = false;
@@ -92,14 +101,12 @@ var Lv1State = {
 		this.player.scale.set(1,1);
 		this.attackBox.scale.set(1,1);
 		this.player.body.velocity.x = 60;
-		this.player.animations.play('walk');
 	},
 	
 	moveLeft: function(){
 		this.player.scale.set(-1,1);
 		this.attackBox.scale.set(-1,1);
 		this.player.body.velocity.x = -60;
-		this.player.animations.play('walk');
 	},
 	
 	jump: function(){
@@ -112,17 +119,17 @@ var Lv1State = {
 	attack: function(){
 		this.player.canWalk = false;
 		this.player.canJump = false;
-		//this.player.canAttack = false;
-		//this.player.animations.stop();
 		this.player.animations.play('attack');
 	},
 	
 	move: function(){
 		if(this.controls.right.isDown && this.player.canWalk){
 			this.moveRight();
+			this.player.animations.play('walk');
 		} else
 		if(this.controls.left.isDown && this.player.canWalk){
 			this.moveLeft();
+			this.player.animations.play('walk');
 		}
 		
 		if(this.controls.up.isDown){

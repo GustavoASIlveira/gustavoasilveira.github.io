@@ -119,22 +119,6 @@
                  "y":256
                 }, 
                 {
-                 "gid":51,
-                 "height":32,
-                 "id":6,
-                 "name":"",
-                 "properties":
-                    {
-                     "Name":"player"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":32,
-                 "y":256
-                }, 
-                {
                  "gid":7,
                  "height":32,
                  "id":7,
