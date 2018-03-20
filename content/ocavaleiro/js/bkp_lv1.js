@@ -163,6 +163,6 @@ var Lv1State = {
 	},
 	
 	render: function(){
-		//game.debug.body(this.attackBox);
+	//	game.debug.body(this.attackBox);
 	}
 };

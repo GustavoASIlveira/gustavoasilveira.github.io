@@ -15,6 +15,11 @@ var LoadState = {
 		game.load.image('part','assets/img/part.png');
 		game.load.spritesheet('coin','assets/img/coin.png',32,32);
 		game.load.spritesheet('player','assets/img/soldier.png',32,32);
+		
+		game.load.image('btnLeft','assets/img/btnLeft.png');
+		game.load.image('btnRight','assets/img/btnRight.png');
+		game.load.image('btnJump','assets/img/btnJump.png');
+		game.load.image('btnAttack','assets/img/btnAttack.png');
 	},
 	
 	create: function(){
