@@ -10,13 +10,19 @@ var Lv1State = {
 		
 		this.map.setCollisionBetween(0,63,true,'blockLayer');
 		
+		//--> Coins
+		this.coins = game.add.group();
+		this.coins.enableBody = true;
+		//--> Fim Coins
 		
 		//-- > Crates
 		this.crates = game.add.group();
 		this.crates.enableBody = true;
 		this.map.createFromObjects('objectLayer',7,'crate',0,true,false,this.crates);
 		this.crates.setAll('body.immovable',true);
+		//-- > Fim Crates
 		
+		//--> CrateFrags
 		this.crateFrag = game.add.emitter(0,0,4);
 		this.crateFrag.makeParticles('crateFrag');
 		this.crateFrag.setXSpeed(-50,50);
@@ -49,6 +55,14 @@ var Lv1State = {
 		
 		game.camera.follow(this.player);
 		
+		//--> CoinsFrags
+		//params: posX,posY,maxPerticles
+		this.coinFrag = game.add.emitter(0,0,10);
+		this.coinFrag.makeParticles('part');
+		this.coinFrag.setXSpeed(-50,50);
+		this.coinFrag.setYSpeed(-50,50);
+		this.coinFrag.gravity.y = 0;
+		//--> Fim CoinsFrags
 		
 		//Controls
 		this.controls = game.input.keyboard.createCursorKeys();
@@ -117,8 +131,11 @@ var Lv1State = {
 		this.attackBox.y = this.player.y + 2;
 		
 		game.physics.arcade.collide(this.player,this.blockLayer);
+		game.physics.arcade.collide(this.coins,this.blockLayer);
+		game.physics.arcade.collide(this.coins,this.crates);
 		game.physics.arcade.collide(this.player,this.crates);
 		game.physics.arcade.overlap(this.attackBox,this.crates,this.destroyCrate,null,this);
+		game.physics.arcade.overlap(this.player,this.coins,this.getCoin,null,this);
 		
 		this.player.body.velocity.x = 0;
 		
@@ -192,13 +209,34 @@ var Lv1State = {
 				this.crateFrag.x = crate.position.x;
 				this.crateFrag.y = crate.position.y;
 				this.crateFrag.start(true,500,null,4);
+				
+				//Criar moeda
+				var coin = this.coins.create(crate.x,crate.y,'coin');
+					coin.body.setSize(18,18,7,7);
+					coin.animations.add('spin',[0,1,2,3,4],10,true).play();
+					coin.body.gravity.y = 800;
+					coin.body.velocity.y = -200;
+					
 				crate.destroy();
 			},this);
 			this.player.canHit = false;
 		}
 	},
 	
+	getCoin: function(player,coin){
+		this.coinFrag.x = coin.x + coin.width/2;
+		this.coinFrag.y = coin.y + coin.height/2;
+		//Params: explode, lifespam, frequency, quantity, forceQuantity
+		this.coinFrag.start(true,500,null,10);
+		coin.destroy();
+	},
+	
 	render: function(){
-	//	game.debug.body(this.attackBox);
+		/*
+		game.debug.body(this.player);
+		this.coins.forEach(function(coin){
+			game.debug.body(coin);
+		});
+		*/
 	}
 };
