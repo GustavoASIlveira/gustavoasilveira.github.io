@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pt-br" lang="pt-br">
+
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<meta name="generator" content="Geany 1.27" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Missões Zombicide BP</title>
+	<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css" />
+	<script src="js/jquery-1.12.4.min.js"></script>
+	<script src="js/jquery.mobile-1.4.5.min.js"></script>
+	<style>
+		body{
+			background:url('img/bkg.jpeg');
+			background-repeat:repeat-y;
+			background-position:center center;
+			background-attachment:scroll;
+			background-size:100% 100%;
+		}
+		
+		.ui-page {
+			background: transparent;
+		}
+		.ui-content{
+			background: transparent;
+		}
+	</style>
+</head>
+<body>
+	<div data-role = "page" data-theme="b">
+		<div data-role = "header">
+			<h1 style="font-size:95%;"> Fase dos Zumbis </h1>
+		</div>
+		
+		<div data-role = "main" class = "ui-content">
+				
+			<form>
+				<fieldset data-role="controlgroup" data-iconpos="right">
+					<input type="checkbox" name="checkbox-t-2a" id="checkbox-t-2a" data-theme="b" checked="false">
+					<label for="checkbox-t-2a">Ações dos Zumbis</label>
+					<input type="checkbox" name="checkbox-t-2b" id="checkbox-t-2b" data-theme="b" checked="false">
+					<label for="checkbox-t-2b">Entrada dos Zumbis</label>
+					<input type="checkbox" name="checkbox-t-2c" id="checkbox-t-2c" data-theme="b" checked="false">
+					<label for="checkbox-t-2c">Remover Ruídos</label>
+					<input type="checkbox" name="checkbox-t-2d" id="checkbox-t-2d" data-theme="b" checked="false">
+					<label for="checkbox-t-2d">Passar "Primeiro Jogador"</label>
+				</fieldset>
+			</form>
+			
+		</div>
+		
+		
+		<footer data-role="footer" data-position="fixed" >
+			<h6 style="padding:0;">
+				<a href="" data-role="button" style="margin:0 auto;width:90%; font-size:110%;" id="btnOk">Fase dos Jogadores</a>
+			</h6>
+		</footer>
+	</div>
+	
+	<script>
+		let chkBoxes = document.querySelector("fieldset").getElementsByTagName('input');
+		var go = false;
+		
+		for(var i in chkBoxes){
+			if(chkBoxes[i].type == 'checkbox'){
+				chkBoxes[i].checked = false;
+			}
+		}
+		
+		const btn = document.querySelector("#btnOk");
+		btn.addEventListener("click", function(){
+			for(var i in chkBoxes){
+				if(chkBoxes[i].type == 'checkbox'){
+					if(!chkBoxes[i].checked){
+						alert("Marque todas as etapas!");
+						return;
+					}
+				}
+			}
+			location.reload();
+			return;
+		});
+		
+	</script>
+</body>
+</html>
