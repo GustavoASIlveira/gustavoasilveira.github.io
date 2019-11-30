@@ -28,6 +28,7 @@
 	</style>
 </head>
 <body>
+	<!-- Página de controle do turno dos zumbis-->
 	<div data-role = "page" data-theme="b">
 		<div data-role = "header">
 			<h1 style="font-size:95%;"> Fase dos Zumbis </h1>
@@ -47,7 +48,8 @@
 					<label for="checkbox-t-2d">Passar "Primeiro Jogador"</label>
 				</fieldset>
 			</form>
-			
+			<!-- Link que dispara o alert (gambiarra!) -->
+			<a id='lnkDialog' href="#aviso" style='display:none;'></a>
 		</div>
 		
 		
@@ -56,7 +58,22 @@
 				<a href="" data-role="button" style="margin:0 auto;width:90%; font-size:110%;" id="btnOk">Fase dos Jogadores</a>
 			</h6>
 		</footer>
+		
 	</div>
+	
+	<!-- Alert disparado quando o botão 'continuar' é clicado antes das opções estarem marcadas-->
+	<div data-role="page" data-dialog="true" data-theme="b" id="aviso">
+		<div data-role = "header">
+			<h1> ATENÇÂO! </h1>
+		</div>
+		
+		<div data-role = "main" class = "ui-content" style="background-color: #000;">
+			<p> Marque todas as ações antes de continuar </p>
+		</div>
+		
+	</div>
+	
+	
 	
 	<script>
 		let chkBoxes = document.querySelector("fieldset").getElementsByTagName('input');
@@ -73,7 +90,7 @@
 			for(var i in chkBoxes){
 				if(chkBoxes[i].type == 'checkbox'){
 					if(!chkBoxes[i].checked){
-						alert("Marque todas as etapas!");
+						document.querySelector("#lnkDialog").click();
 						return;
 					}
 				}
