@@ -13,8 +13,9 @@ const btnNewGame = $('#btnNewGame')
 const startModal = $('#startModal')
 const startContainer = $('#startContainer')
 const musicGame = $('#musicGame')
-const SHOOTING = 1
-const EXPLOSION = 2
+	musicGame.volume = .5
+const EXPLOSION = 1
+const SHOOTING = 2
 
 let projectiles = []
 let enemies = []
@@ -62,7 +63,6 @@ cnv.addEventListener('click',(e)=>{
 startContainer.addEventListener('click',()=>{
 	startModal.style.opacity = 0
 	
-	
 	setTimeout(()=>{
 		startModal.style.zIndex = -1
 	},500)
@@ -85,14 +85,6 @@ function update(){
 	checkProjectiles()
 	checkParticles()
 	player.update()
-}
-
-function playSound(soundType){
-	const sound = document.createElement('audio')
-	sound.src = soundType === EXPLOSION ? './snd/explosion.ogg' : './snd/shooting.mp3'
-	sound.addEventListener('canplaythrough',()=>{
-		sound.play()
-	})
 }
 
 function checkEnemies(){
@@ -131,6 +123,14 @@ function newGame(){
 	ctx.fillRect(0,0,cnv.width,cnv.height)
 }
 
+function playSound(soundType){
+	const sound  = document.createElement('audio')
+	sound.src = soundType === EXPLOSION ? './snd/explosion.ogg' : './snd/shooting.mp3'
+	sound.addEventListener('canplaythrough',()=>{
+		sound.play()
+	})
+}
+
 function checkProjectiles(){
 	for(let i = projectiles.length -1; i >= 0; i--){
 		const p = projectiles[i]
@@ -144,7 +144,6 @@ function checkProjectiles(){
 			//Colisão do projétil com o inimigo
 			if(distance < p.radius + enemy.radius){
 				playSound(EXPLOSION)
-			
 				if(enemy.radius > 15){
 					enemy.newRadius = enemy.radius -10
 				} else {
